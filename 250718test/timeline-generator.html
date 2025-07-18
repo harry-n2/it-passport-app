@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タイムライン生成</title>
+    <style>
+        body { font-family: sans-serif; padding: 1rem; }
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+        .timeline::after { content: ''; position: absolute; width: 4px; background-color: #2d6cdf; top: 0; bottom: 0; left: 50%; margin-left: -2px; }
+        .timeline-item { padding: 10px 40px; position: relative; background-color: inherit; width: 50%; }
+        .timeline-item.left { left: 0; }
+        .timeline-item.right { left: 50%; }
+        .timeline-item::after { content: ''; position: absolute; width: 20px; height: 20px; right: -10px; background-color: white; border: 4px solid #2d6cdf; top: 15px; border-radius: 50%; z-index: 1; }
+        .timeline-item.right::after { left: -10px; }
+        .content { padding: 20px 30px; background-color: white; position: relative; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <div class="timeline" id="timeline">
+        <!-- Items will be generated here -->
+    </div>
+    <script>
+        const timelineContainer = document.getElementById('timeline');
+        const events = [
+            { date: '2023-01-01', text: 'プロジェクト開始' },
+            { date: '2023-03-15', text: 'マイルストーン 1 達成' },
+            { date: '2023-06-30', text: 'デザイン完了' },
+            { date: '2023-10-01', text: 'ベータ版リリース' },
+            { date: '2024-01-01', text: '正式リリース' }
+        ];
+
+        events.forEach((event, index) => {
+            const item = document.createElement('div');
+            item.className = `timeline-item ${index % 2 === 0 ? 'left' : 'right'}`;
+            item.innerHTML = `
+                <div class="content">
+                    <h2>${event.date}</h2>
+                    <p>${event.text}</p>
+                </div>
+            `;
+            timelineContainer.appendChild(item);
+        });
+    </script>
+</body>
+</html>

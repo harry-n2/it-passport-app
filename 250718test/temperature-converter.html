@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>温度変換</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
+        h1 { color: #333; }
+        .input-group { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; }
+        input { width: 100px; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1.2rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>温度変換</h1>
+        <div class="input-group">
+            <input type="number" id="celsius" value="0">
+            <label>°C</label>
+        </div>
+        <div class="input-group">
+            <input type="number" id="fahrenheit" value="32">
+            <label>°F</label>
+        </div>
+        <div class="input-group">
+            <input type="number" id="kelvin" value="273.15">
+            <label>K</label>
+        </div>
+    </div>
+
+    <script>
+        const celsiusInput = document.getElementById('celsius');
+        const fahrenheitInput = document.getElementById('fahrenheit');
+        const kelvinInput = document.getElementById('kelvin');
+
+        function round(val) {
+            return Math.round(val * 100) / 100;
+        }
+
+        celsiusInput.addEventListener('input', () => {
+            const c = parseFloat(celsiusInput.value);
+            fahrenheitInput.value = round(c * 9/5 + 32);
+            kelvinInput.value = round(c + 273.15);
+        });
+        fahrenheitInput.addEventListener('input', () => {
+            const f = parseFloat(fahrenheitInput.value);
+            celsiusInput.value = round((f - 32) * 5/9);
+            kelvinInput.value = round((f - 32) * 5/9 + 273.15);
+        });
+        kelvinInput.addEventListener('input', () => {
+            const k = parseFloat(kelvinInput.value);
+            celsiusInput.value = round(k - 273.15);
+            fahrenheitInput.value = round((k - 273.15) * 9/5 + 32);
+        });
+    </script>
+</body>
+</html>

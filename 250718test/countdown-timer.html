@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カウントダウンタイマー</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 600px; text-align: center; }
+        h1 { color: #333; }
+        .input-group { margin-bottom: 1.5rem; }
+        input[type="datetime-local"] { padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
+        .timer-display { display: flex; justify-content: space-around; margin-top: 2rem; }
+        .timer-box { background-color: #f9f9f9; padding: 1rem; border-radius: 5px; width: 100px; }
+        .timer-box span { display: block; font-size: 2.5rem; font-weight: bold; color: #2d6cdf; }
+        .timer-box p { margin: 0; color: #666; }
+        #message { margin-top: 1.5rem; font-size: 1.2rem; font-weight: bold; color: #28a745; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>カウントダウンタイマー</h1>
+        <div class="input-group">
+            <label for="target-date">目標日時: </label>
+            <input type="datetime-local" id="target-date">
+        </div>
+        <div class="timer-display">
+            <div class="timer-box"><span id="days">0</span><p>日</p></div>
+            <div class="timer-box"><span id="hours">0</span><p>時間</p></div>
+            <div class="timer-box"><span id="minutes">0</span><p>分</p></div>
+            <div class="timer-box"><span id="seconds">0</span><p>秒</p></div>
+        </div>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        const targetDateInput = document.getElementById('target-date');
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        const messageEl = document.getElementById('message');
+
+        let timerInterval;
+
+        function startCountdown() {
+            const targetDate = new Date(targetDateInput.value).getTime();
+            if (isNaN(targetDate)) {
+                messageEl.textContent = '有効な日時を設定してください。';
+                return;
+            }
+            
+            messageEl.textContent = '';
+            clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    messageEl.textContent = 'カウントダウン終了！';
+                    daysEl.textContent = '0';
+                    hoursEl.textContent = '0';
+                    minutesEl.textContent = '0';
+                    secondsEl.textContent = '0';
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                daysEl.textContent = days;
+                hoursEl.textContent = hours;
+                minutesEl.textContent = minutes;
+                secondsEl.textContent = seconds;
+            }, 1000);
+        }
+
+        targetDateInput.addEventListener('change', startCountdown);
+
+        // Set default to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        targetDateInput.value = tomorrow.toISOString().slice(0, 16);
+        startCountdown();
+    </script>
+</body>
+</html>

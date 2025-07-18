@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>年齢計算</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
+        h1 { color: #333; }
+        .input-group { margin-bottom: 1.5rem; }
+        label { font-weight: bold; }
+        input[type="date"] { padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; width: 80%; margin-top: 0.5rem; }
+        .result { margin-top: 1.5rem; background-color: #f9f9f9; padding: 1rem; border-radius: 5px; }
+        .result p { margin: 0.5rem 0; font-size: 1.2rem; }
+        .result span { font-weight: bold; font-size: 1.5rem; color: #2d6cdf; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>年齢計算</h1>
+        <div class="input-group">
+            <label for="birthdate">生年月日を選択してください</label>
+            <input type="date" id="birthdate">
+        </div>
+        <div id="result" class="result">
+            <p>あなたの年齢は...</p>
+            <p><span id="years">0</span> 年 <span id="months">0</span> ヶ月 <span id="days">0</span> 日</p>
+        </div>
+    </div>
+
+    <script>
+        const birthdateInput = document.getElementById('birthdate');
+        const yearsEl = document.getElementById('years');
+        const monthsEl = document.getElementById('months');
+        const daysEl = document.getElementById('days');
+
+        function calculateAge() {
+            const birthDate = new Date(birthdateInput.value);
+            if (isNaN(birthDate.getTime())) return;
+
+            const today = new Date();
+            
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            yearsEl.textContent = years;
+            monthsEl.textContent = months;
+            daysEl.textContent = days;
+        }
+
+        birthdateInput.addEventListener('change', calculateAge);
+        
+        // Set default date to 20 years ago
+        const defaultDate = new Date();
+        defaultDate.setFullYear(defaultDate.getFullYear() - 20);
+        birthdateInput.value = defaultDate.toISOString().split('T')[0];
+        calculateAge();
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Box-Shadow 生成</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 800px; display: flex; gap: 2rem; }
+        .controls { width: 50%; }
+        .preview-area { width: 50%; display: flex; justify-content: center; align-items: center; background-color: #f9f9f9; border-radius: 5px; }
+        #preview-box { width: 100px; height: 100px; background-color: #2d6cdf; }
+        .control-group { margin-bottom: 1rem; }
+        label { display: block; }
+        input[type="range"] { width: 100%; }
+        .code { background-color: #eee; padding: 1rem; border-radius: 5px; font-family: 'Courier New', Courier, monospace; white-space: pre-wrap; word-wrap: break-word; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <h1>Box-Shadow 生成</h1>
+            <div class="control-group">
+                <label>水平オフセット: <span id="h-offset-val">10</span>px</label>
+                <input type="range" id="h-offset" min="-50" max="50" value="10">
+            </div>
+            <div class="control-group">
+                <label>垂直オフセット: <span id="v-offset-val">10</span>px</label>
+                <input type="range" id="v-offset" min="-50" max="50" value="10">
+            </div>
+            <div class="control-group">
+                <label>ぼかし: <span id="blur-val">5</span>px</label>
+                <input type="range" id="blur" min="0" max="50" value="5">
+            </div>
+            <div class="control-group">
+                <label>広がり: <span id="spread-val">0</span>px</label>
+                <input type="range" id="spread" min="-50" max="50" value="0">
+            </div>
+            <div class="control-group">
+                <label>色: <input type="color" id="color" value="#000000"></label>
+            </div>
+            <div id="code" class="code"></div>
+        </div>
+        <div class="preview-area">
+            <div id="preview-box"></div>
+        </div>
+    </div>
+
+    <script>
+        const hOffset = document.getElementById('h-offset');
+        const vOffset = document.getElementById('v-offset');
+        const blur = document.getElementById('blur');
+        const spread = document.getElementById('spread');
+        const color = document.getElementById('color');
+        const previewBox = document.getElementById('preview-box');
+        const codeOutput = document.getElementById('code');
+
+        const inputs = [hOffset, vOffset, blur, spread, color];
+
+        function updateShadow() {
+            const h = hOffset.value;
+            const v = vOffset.value;
+            const b = blur.value;
+            const s = spread.value;
+            const c = color.value;
+
+            document.getElementById('h-offset-val').textContent = h;
+            document.getElementById('v-offset-val').textContent = v;
+            document.getElementById('blur-val').textContent = b;
+            document.getElementById('spread-val').textContent = s;
+
+            const shadow = `${h}px ${v}px ${b}px ${s}px ${c}`;
+            previewBox.style.boxShadow = shadow;
+            codeOutput.textContent = `box-shadow: ${shadow};`;
+        }
+
+        inputs.forEach(input => input.addEventListener('input', updateShadow));
+        updateShadow();
+    </script>
+</body>
+</html>

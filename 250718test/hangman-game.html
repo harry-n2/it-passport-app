@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ハングマン</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+        #word-display { font-size: 3rem; letter-spacing: 0.5em; margin: 1rem 0; }
+        #guesses-left { margin-bottom: 1rem; }
+        #keyboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(40px, 1fr)); gap: 5px; }
+        #keyboard button { padding: 1rem 0.5rem; font-size: 1rem; cursor: pointer; }
+        #keyboard button:disabled { background-color: #ddd; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ハングマン</h1>
+        <p id="word-display"></p>
+        <p id="guesses-left"></p>
+        <div id="keyboard"></div>
+        <button id="reset-btn" style="margin-top: 1rem;">リセット</button>
+    </div>
+
+    <script>
+        const wordDisplayEl = document.getElementById('word-display');
+        const guessesLeftEl = document.getElementById('guesses-left');
+        const keyboardEl = document.getElementById('keyboard');
+        const resetBtn = document.getElementById('reset-btn');
+
+        const words = ["apple", "banana", "orange", "grape", "strawberry"];
+        let selectedWord, guessedLetters, wrongGuesses;
+
+        function startGame() {
+            selectedWord = words[Math.floor(Math.random() * words.length)];
+            guessedLetters = [];
+            wrongGuesses = 0;
+            updateDisplay();
+            createKeyboard();
+        }
+
+        function updateDisplay() {
+            wordDisplayEl.textContent = selectedWord.split('').map(letter => guessedLetters.includes(letter) ? letter : '_').join(' ');
+            guessesLeftEl.textContent = `残り試行回数: ${6 - wrongGuesses}`;
+            checkGameStatus();
+        }
+
+        function createKeyboard() {
+            keyboardEl.innerHTML = '';
+            'abcdefghijklmnopqrstuvwxyz'.split('').forEach(letter => {
+                const btn = document.createElement('button');
+                btn.textContent = letter;
+                btn.addEventListener('click', () => handleGuess(letter, btn));
+                keyboardEl.appendChild(btn);
+            });
+        }
+
+        function handleGuess(letter, btn) {
+            btn.disabled = true;
+            if (selectedWord.includes(letter)) {
+                guessedLetters.push(letter);
+            } else {
+                wrongGuesses++;
+            }
+            updateDisplay();
+        }
+
+        function checkGameStatus() {
+            if (wrongGuesses >= 6) {
+                wordDisplayEl.textContent = `残念！正解は ${selectedWord} でした`;
+                keyboardEl.querySelectorAll('button').forEach(b => b.disabled = true);
+            }
+            if (selectedWord.split('').every(letter => guessedLetters.includes(letter))) {
+                wordDisplayEl.textContent = 'クリア！';
+                keyboardEl.querySelectorAll('button').forEach(b => b.disabled = true);
+            }
+        }
+
+        resetBtn.addEventListener('click', startGame);
+        startGame();
+    </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100の業務効率化アプリ</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f4f4f4; }
+        header { background: #333; color: #fff; padding: 2rem 0; text-align: center; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
+        .app-card { background: #fff; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; padding: 1.5rem; transition: transform 0.2s; }
+        .app-card:hover { transform: translateY(-5px); }
+        .app-card a { text-decoration: none; color: #333; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>100の業務効率化＆便利アプリ集</h1>
+        <p>Geminiによって生成されました</p>
+    </header>
+    <div class="container">
+        <div class="app-grid" id="app-grid">
+            <!-- App links will be generated here -->
+        </div>
+    </div>
+    <script>
+        const appGrid = document.getElementById('app-grid');
+        const appNames = [
+            'greeting.html', 'othello.html', 'analog-clock.html', 'currency-converter.html', 'unit-converter.html',
+            'time-calculator.html', 'mirror-app.html', 'qr-code-generator.html', 'memo-pad.html', 'char-counter.html',
+            'password-generator.html', 'color-picker.html', 'markdown-previewer.html', 'countdown-timer.html', 'stopwatch.html',
+            'bmi-calculator.html', 'age-calculator.html', 'random-number-generator.html', 'coin-flip.html', 'json-formatter.html',
+            'base64-encoder.html', 'url-encoder.html', 'drawing-pad.html', 'pomodoro-timer.html', 'text-to-speech.html',
+            'speech-to-text.html', 'image-compressor.html', 'image-resizer.html', 'lorem-ipsum-generator.html', 'case-converter.html',
+            'text-reverser.html', 'line-sorter.html', 'duplicate-line-remover.html', 'simple-poll.html', 'digital-clock.html',
+            'world-clock.html', 'periodic-table.html', 'morse-code-converter.html', 'simple-interest-calculator.html', 'compound-interest-calculator.html',
+            'loan-calculator.html', 'tip-calculator.html', 'css-gradient-generator.html', 'css-box-shadow-generator.html', 'todo-list.html',
+            'weather-app.html', 'recipe-finder.html', 'random-quote-generator.html', 'github-user-search.html', 'ip-address-finder.html',
+            'keyboard-event-tester.html', 'regex-tester.html', 'decision-roulette.html', 'metronome.html', 'tone-generator.html',
+            'screen-ruler.html', 'image-to-base64.html', 'file-hash-calculator.html', 'temperature-converter.html', 'simple-code-editor.html',
+            'accordion-ui.html', 'tabs-ui.html', 'modal-ui.html', 'carousel-ui.html', 'drag-and-drop-list.html',
+            'star-rating.html', 'custom-video-player.html', 'pixel-art-pad.html', 'days-until-date.html', 'word-scramble.html',
+            'hangman-game.html', 'memory-game.html', 'tic-tac-toe.html', 'snake-game.html', 'breakout-game.html',
+            'click-speed-test.html', 'typing-speed-test.html', 'data-grid-editor.html', 'tree-view-generator.html', 'svg-shape-editor.html',
+            'image-placeholder-generator.html', 'sprite-animator.html', 'soundboard.html', 'simple-quiz.html', 'kanban-board.html',
+            'mind-map-generator.html', 'timeline-generator.html', 'pie-chart-generator.html', 'bar-chart-generator.html', 'random-team-generator.html',
+            'simple-blog-layout.html', 'product-page-layout.html', 'parallax-scrolling.html', 'filterable-list.html', 'music-player.html',
+            'image-magnifier.html', 'simple-captcha.html', 'credit-card-form.html', 'calculator.html', 'calendar.html',
+            'contact-form.html', 'progress-bar.html', 'pagination-ui.html'
+        ];
+
+        appNames.forEach((name, index) => {
+            const card = document.createElement('div');
+            card.className = 'app-card';
+            const title = name.replace('.html', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            card.innerHTML = `<a href="./${name}" target="_blank">${index + 1}. ${title}</a>`;
+            appGrid.appendChild(card);
+        });
+    </script>
+</body>
+</html>

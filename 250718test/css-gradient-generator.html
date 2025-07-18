@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSSグラデーション生成</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 600px; }
+        h1 { text-align: center; color: #333; }
+        .preview { width: 100%; height: 200px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 1rem; }
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .code { background-color: #f9f9f9; padding: 1rem; border-radius: 5px; font-family: 'Courier New', Courier, monospace; white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CSSグラデーション生成</h1>
+        <div id="preview" class="preview"></div>
+        <div class="controls">
+            <div><label>色1: <input type="color" id="color1" value="#ff8a80"></label></div>
+            <div><label>色2: <input type="color" id="color2" value="#b3e5fc"></label></div>
+            <div><label>角度: <input type="range" id="angle" min="0" max="360" value="90"></label></div>
+        </div>
+        <div id="code" class="code"></div>
+    </div>
+
+    <script>
+        const preview = document.getElementById('preview');
+        const codeOutput = document.getElementById('code');
+        const color1Input = document.getElementById('color1');
+        const color2Input = document.getElementById('color2');
+        const angleInput = document.getElementById('angle');
+
+        function updateGradient() {
+            const color1 = color1Input.value;
+            const color2 = color2Input.value;
+            const angle = angleInput.value;
+            
+            const gradient = `linear-gradient(${angle}deg, ${color1}, ${color2})`;
+            
+            preview.style.background = gradient;
+            codeOutput.textContent = `background: ${gradient};`;
+        }
+
+        [color1Input, color2Input, angleInput].forEach(input => {
+            input.addEventListener('input', updateGradient);
+        });
+
+        updateGradient();
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポモドーロタイマー</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
+        .modes { margin-bottom: 1.5rem; }
+        .modes button { padding: 0.5rem 1rem; border-radius: 5px; border: 1px solid #ccc; cursor: pointer; background: none; margin: 0 0.25rem; }
+        .modes button.active { background-color: #2d6cdf; color: white; border-color: #2d6cdf; }
+        .time-display { font-size: 6rem; font-weight: bold; margin-bottom: 1.5rem; }
+        .controls button { font-size: 1.2rem; padding: 0.75rem 1.5rem; margin: 0 0.5rem; border: none; border-radius: 5px; cursor: pointer; width: 120px; }
+        #start-stop-btn { background-color: #28a745; color: white; }
+        #reset-btn { background-color: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="modes">
+            <button id="pomodoro-btn" class="active">ポモドーロ</button>
+            <button id="short-break-btn">短い休憩</button>
+            <button id="long-break-btn">長い休憩</button>
+        </div>
+        <div class="time-display" id="time-display">25:00</div>
+        <div class="controls">
+            <button id="start-stop-btn">スタート</button>
+            <button id="reset-btn">リセット</button>
+        </div>
+    </div>
+
+    <script>
+        const timeDisplay = document.getElementById('time-display');
+        const startStopBtn = document.getElementById('start-stop-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const modeButtons = document.querySelectorAll('.modes button');
+
+        const modes = {
+            pomodoro: 25,
+            shortBreak: 5,
+            longBreak: 15
+        };
+        let currentMode = 'pomodoro';
+        let timeInSeconds = modes[currentMode] * 60;
+        let timerInterval;
+        let running = false;
+
+        function updateDisplay() {
+            const minutes = Math.floor(timeInSeconds / 60);
+            const seconds = timeInSeconds % 60;
+            timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.title = `${timeDisplay.textContent} - ${currentMode}`;
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.querySelector('.modes .active').classList.remove('active');
+            document.getElementById(`${mode.replace('B','-b')}-btn`).classList.add('active');
+            resetTimer();
+        }
+
+        function startStopTimer() {
+            if (running) {
+                clearInterval(timerInterval);
+                running = false;
+                startStopBtn.textContent = 'スタート';
+            } else {
+                running = true;
+                startStopBtn.textContent = 'ストップ';
+                timerInterval = setInterval(() => {
+                    timeInSeconds--;
+                    if (timeInSeconds < 0) {
+                        clearInterval(timerInterval);
+                        alert('時間です！');
+                        // 自動で次のモードへ
+                        if (currentMode === 'pomodoro') {
+                            switchMode('shortBreak');
+                        } else {
+                            switchMode('pomodoro');
+                        }
+                    } else {
+                        updateDisplay();
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            running = false;
+            timeInSeconds = modes[currentMode] * 60;
+            startStopBtn.textContent = 'スタート';
+            updateDisplay();
+        }
+
+        modeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const mode = e.target.id.replace('-btn', '').replace('-b','B');
+                switchMode(mode);
+            });
+        });
+
+        startStopBtn.addEventListener('click', startStopTimer);
+        resetBtn.addEventListener('click', resetTimer);
+
+        updateDisplay();
+    </script>
+</body>
+</html>

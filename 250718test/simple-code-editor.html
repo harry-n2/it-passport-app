@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>簡易コードエディタ</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; }
+        .panes { display: flex; flex-grow: 1; }
+        .editor-pane, .preview-pane { width: 50%; display: flex; flex-direction: column; }
+        textarea { flex-grow: 1; border: none; padding: 1rem; font-family: 'Courier New', Courier, monospace; font-size: 1rem; resize: none; }
+        iframe { flex-grow: 1; border: none; }
+        h2 { margin: 0; padding: 0.5rem; background-color: #eee; }
+    </style>
+</head>
+<body>
+    <div class="panes">
+        <div class="editor-pane">
+            <h2>HTML</h2>
+            <textarea id="html-editor"></textarea>
+            <h2>CSS</h2>
+            <textarea id="css-editor"></textarea>
+            <h2>JS</h2>
+            <textarea id="js-editor"></textarea>
+        </div>
+        <div class="preview-pane">
+            <h2>プレビュー</h2>
+            <iframe id="preview"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const htmlEditor = document.getElementById('html-editor');
+        const cssEditor = document.getElementById('css-editor');
+        const jsEditor = document.getElementById('js-editor');
+        const preview = document.getElementById('preview');
+
+        function render() {
+            const source = `
+                <html>
+                    <head>
+                        <style>${cssEditor.value}</style>
+                    </head>
+                    <body>
+                        ${htmlEditor.value}
+                        <script>${jsEditor.value}<\/script>
+                    </body>
+                </html>
+            `;
+            preview.srcdoc = source;
+        }
+
+        [htmlEditor, cssEditor, jsEditor].forEach(editor => editor.addEventListener('input', render));
+        
+        htmlEditor.value = `<h1>こんにちは！</h1>\n<p>ここにHTMLを書いてください。</p>`;
+        cssEditor.value = `body { color: #2d6cdf; }`;
+        jsEditor.value = `document.querySelector('h1').addEventListener('click', () => alert('クリックされました！'));`;
+        render();
+    </script>
+</body>
+</html>

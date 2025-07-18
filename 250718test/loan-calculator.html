@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ローン計算</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; }
+        h1 { text-align: center; color: #333; }
+        .input-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; }
+        input { width: calc(100% - 1.5rem); padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; }
+        button { width: 100%; padding: 0.75rem; background-color: #2d6cdf; color: white; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer; margin-top: 1rem; }
+        .result { margin-top: 1.5rem; text-align: center; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ローン計算</h1>
+        <div class="input-group">
+            <label for="amount">借入額 (円)</label>
+            <input type="number" id="amount" value="30000000">
+        </div>
+        <div class="input-group">
+            <label for="rate">年利率 (%)</label>
+            <input type="number" id="rate" value="1.5">
+        </div>
+        <div class="input-group">
+            <label for="years">返済期間 (年)</label>
+            <input type="number" id="years" value="35">
+        </div>
+        <button id="calculate-btn">計算</button>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        const amountInput = document.getElementById('amount');
+        const rateInput = document.getElementById('rate');
+        const yearsInput = document.getElementById('years');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const resultDiv = document.getElementById('result');
+
+        function calculate() {
+            const amount = parseFloat(amountInput.value);
+            const annualRate = parseFloat(rateInput.value) / 100;
+            const years = parseFloat(yearsInput.value);
+
+            if (isNaN(amount) || isNaN(annualRate) || isNaN(years)) return;
+
+            const monthlyRate = annualRate / 12;
+            const numberOfPayments = years * 12;
+            
+            const monthlyPayment = amount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments) / (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+            const totalPayment = monthlyPayment * numberOfPayments;
+            const totalInterest = totalPayment - amount;
+
+            resultDiv.innerHTML = `
+                <p>毎月の返済額: <strong>${Math.round(monthlyPayment).toLocaleString()} 円</strong></p>
+                <p>総返済額: ${Math.round(totalPayment).toLocaleString()} 円</p>
+                <p>総利息: ${Math.round(totalInterest).toLocaleString()} 円</p>
+            `;
+        }
+
+        calculateBtn.addEventListener('click', calculate);
+        calculate();
+    </script>
+</body>
+</html>

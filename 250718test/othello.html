@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Othello Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .score {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .score-label {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .score-value {
+            background: #333;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .turn-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .turn-piece {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #333;
+        }
+
+        .black { background: #333; }
+        .white { background: #fff; }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+            background: #2d5016;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 0 auto;
+            max-width: 480px;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            background: #4a7c59;
+            border: 1px solid #2d5016;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .cell:hover {
+            background: #5a8c69;
+        }
+
+        .cell.valid-move {
+            background: #6fa876;
+            box-shadow: inset 0 0 10px rgba(255, 255, 0, 0.5);
+        }
+
+        .piece {
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            border: 2px solid #333;
+            transition: all 0.3s ease;
+            transform: scale(0);
+        }
+
+        .piece.placed {
+            transform: scale(1);
+        }
+
+        .piece.black {
+            background: #333;
+        }
+
+        .piece.white {
+            background: #fff;
+        }
+
+        .game-over {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 10px;
+            border-left: 5px solid #4caf50;
+        }
+
+        .winner {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-top: 15px;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .board {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Othello</h1>
+        </div>
+        
+        <div class="game-info">
+            <div class="score">
+                <span class="score-label">Black:</span>
+                <span class="score-value" id="blackScore">2</span>
+            </div>
+            
+            <div class="turn-indicator">
+                <span>Turn:</span>
+                <div class="turn-piece black" id="turnIndicator"></div>
+                <span id="turnText">Black</span>
+            </div>
+            
+            <div class="score">
+                <span class="score-label">White:</span>
+                <span class="score-value" id="whiteScore">2</span>
+            </div>
+        </div>
+        
+        <div class="board" id="board"></div>
+        
+        <div class="game-over hidden" id="gameOver">
+            <div class="winner" id="winner"></div>
+            <button class="restart-btn" onclick="initGame()">New Game</button>
+        </div>
+    </div>
+
+    <script>
+        class OthelloGame {
+            constructor() {
+                this.board = Array(8).fill().map(() => Array(8).fill(null));
+                this.currentPlayer = 'black';
+                this.gameOver = false;
+                this.initializeBoard();
+                this.updateDisplay();
+            }
+
+            initializeBoard() {
+                this.board[3][3] = 'white';
+                this.board[3][4] = 'black';
+                this.board[4][3] = 'black';
+                this.board[4][4] = 'white';
+            }
+
+            isValidMove(row, col) {
+                if (this.board[row][col] !== null) return false;
+                
+                const directions = [
+                    [-1, -1], [-1, 0], [-1, 1],
+                    [0, -1],           [0, 1],
+                    [1, -1],  [1, 0],  [1, 1]
+                ];
+
+                for (let [dx, dy] of directions) {
+                    if (this.checkDirection(row, col, dx, dy)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            checkDirection(row, col, dx, dy) {
+                const opponent = this.currentPlayer === 'black' ? 'white' : 'black';
+                let x = row + dx;
+                let y = col + dy;
+                let foundOpponent = false;
+
+                while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                    if (this.board[x][y] === null) return false;
+                    if (this.board[x][y] === opponent) {
+                        foundOpponent = true;
+                    } else if (this.board[x][y] === this.currentPlayer) {
+                        return foundOpponent;
+                    }
+                    x += dx;
+                    y += dy;
+                }
+                return false;
+            }
+
+            makeMove(row, col) {
+                if (!this.isValidMove(row, col) || this.gameOver) return false;
+
+                this.board[row][col] = this.currentPlayer;
+                this.flipPieces(row, col);
+                this.currentPlayer = this.currentPlayer === 'black' ? 'white' : 'black';
+                
+                if (!this.hasValidMoves()) {
+                    this.currentPlayer = this.currentPlayer === 'black' ? 'white' : 'black';
+                    if (!this.hasValidMoves()) {
+                        this.endGame();
+                    }
+                }
+                
+                this.updateDisplay();
+                return true;
+            }
+
+            flipPieces(row, col) {
+                const directions = [
+                    [-1, -1], [-1, 0], [-1, 1],
+                    [0, -1],           [0, 1],
+                    [1, -1],  [1, 0],  [1, 1]
+                ];
+
+                for (let [dx, dy] of directions) {
+                    if (this.checkDirection(row, col, dx, dy)) {
+                        this.flipInDirection(row, col, dx, dy);
+                    }
+                }
+            }
+
+            flipInDirection(row, col, dx, dy) {
+                const opponent = this.currentPlayer === 'black' ? 'white' : 'black';
+                let x = row + dx;
+                let y = col + dy;
+                const toFlip = [];
+
+                while (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                    if (this.board[x][y] === opponent) {
+                        toFlip.push([x, y]);
+                    } else if (this.board[x][y] === this.currentPlayer) {
+                        for (let [fx, fy] of toFlip) {
+                            this.board[fx][fy] = this.currentPlayer;
+                        }
+                        break;
+                    }
+                    x += dx;
+                    y += dy;
+                }
+            }
+
+            hasValidMoves() {
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        if (this.isValidMove(row, col)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            getScore() {
+                let black = 0, white = 0;
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        if (this.board[row][col] === 'black') black++;
+                        if (this.board[row][col] === 'white') white++;
+                    }
+                }
+                return { black, white };
+            }
+
+            endGame() {
+                this.gameOver = true;
+                const score = this.getScore();
+                let winner;
+                
+                if (score.black > score.white) {
+                    winner = 'Black Wins!';
+                } else if (score.white > score.black) {
+                    winner = 'White Wins!';
+                } else {
+                    winner = "It's a Tie!";
+                }
+                
+                document.getElementById('winner').textContent = winner;
+                document.getElementById('gameOver').classList.remove('hidden');
+            }
+
+            updateDisplay() {
+                const boardElement = document.getElementById('board');
+                boardElement.innerHTML = '';
+
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+                        cell.onclick = () => this.makeMove(row, col);
+
+                        if (this.board[row][col]) {
+                            const piece = document.createElement('div');
+                            piece.className = `piece ${this.board[row][col]} placed`;
+                            cell.appendChild(piece);
+                        } else if (this.isValidMove(row, col) && !this.gameOver) {
+                            cell.classList.add('valid-move');
+                        }
+
+                        boardElement.appendChild(cell);
+                    }
+                }
+
+                const score = this.getScore();
+                document.getElementById('blackScore').textContent = score.black;
+                document.getElementById('whiteScore').textContent = score.white;
+                
+                const turnIndicator = document.getElementById('turnIndicator');
+                const turnText = document.getElementById('turnText');
+                turnIndicator.className = `turn-piece ${this.currentPlayer}`;
+                turnText.textContent = this.currentPlayer.charAt(0).toUpperCase() + this.currentPlayer.slice(1);
+            }
+        }
+
+        let game;
+
+        function initGame() {
+            document.getElementById('gameOver').classList.add('hidden');
+            game = new OthelloGame();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

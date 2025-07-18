@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フィルタリングリスト</title>
+    <style>
+        body { font-family: sans-serif; padding: 1rem; }
+        .filter-buttons button { padding: 0.5rem 1rem; margin: 0 0.5rem; cursor: pointer; }
+        .item-list { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+        .item { width: 200px; border: 1px solid #ccc; padding: 1rem; text-align: center; }
+        .item.hide { display: none; }
+    </style>
+</head>
+<body>
+    <div class="filter-buttons">
+        <button data-filter="all">すべて</button>
+        <button data-filter="fruit">果物</button>
+        <button data-filter="vegetable">野菜</button>
+    </div>
+    <div class="item-list">
+        <div class="item" data-category="fruit">りんご</div>
+        <div class="item" data-category="vegetable">にんじん</div>
+        <div class="item" data-category="fruit">バナナ</div>
+        <div class="item" data-category="vegetable">トマト</div>
+        <div class="item" data-category="fruit">ぶどう</div>
+    </div>
+    <script>
+        const filterButtons = document.querySelector('.filter-buttons');
+        const items = document.querySelectorAll('.item');
+        filterButtons.addEventListener('click', e => {
+            if (e.target.tagName !== 'BUTTON') return;
+            const filter = e.target.dataset.filter;
+            items.forEach(item => {
+                if (filter === 'all' || item.dataset.category === filter) {
+                    item.classList.remove('hide');
+                } else {
+                    item.classList.add('hide');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
