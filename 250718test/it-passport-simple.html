@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITパスポート過去問アプリ - 500問で確実合格</title>
+    <meta name="description" content="ITパスポート試験対策の決定版！500問の充実コンテンツで確実合格を目指そう。最新技術から基礎まで完全網羅。">
+    <meta name="keywords" content="ITパスポート,過去問,試験対策,IT資格,情報処理,500問,合格">
+    <meta name="theme-color" content="#007AFF">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ITパスポート">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 414px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: #007AFF;
+            color: white;
+            padding: 16px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .ad-banner {
+            height: 50px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .main-content {
+            padding: 20px 16px;
+        }
+        
+        .menu-section {
+            margin-bottom: 24px;
+        }
+        
+        .menu-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .menu-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .menu-item:active {
+            background-color: #e9ecef;
+        }
+        
+        .menu-item h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #007AFF;
+        }
+        
+        .menu-item p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .premium-badge {
+            display: inline-block;
+            background: #FF3B30;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 8px;
+        }
+        
+        .question-area {
+            display: none;
+            padding: 16px;
+        }
+        
+        .question-area.active {
+            display: block;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .question-number {
+            font-weight: 600;
+            color: #007AFF;
+        }
+        
+        .timer {
+            font-weight: 600;
+            color: #FF3B30;
+        }
+        
+        .question-text {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #007AFF;
+        }
+        
+        .answer-options {
+            margin-bottom: 20px;
+        }
+        
+        .answer-option {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .answer-option:hover {
+            background: #f8f9fa;
+            border-color: #007AFF;
+        }
+        
+        .answer-option.selected {
+            background: #007AFF;
+            color: white;
+            border-color: #007AFF;
+        }
+        
+        .answer-option.correct {
+            background: #34C759;
+            color: white;
+            border-color: #34C759;
+        }
+        
+        .answer-option.incorrect {
+            background: #FF3B30;
+            color: white;
+            border-color: #FF3B30;
+        }
+        
+        .explanation {
+            background: #e8f5e8;
+            border: 1px solid #34C759;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            display: none;
+        }
+        
+        .explanation.show {
+            display: block;
+        }
+        
+        .explanation h4 {
+            color: #34C759;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .explanation p {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .buttons {
+            margin-top: 20px;
+        }
+        
+        .btn {
+            width: 100%;
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        .btn:hover {
+            background: #0056CC;
+        }
+        
+        .btn:disabled {
+            background: #8E8E93;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: #F2F2F7;
+            color: #007AFF;
+        }
+        
+        .btn-secondary:hover {
+            background: #E5E5EA;
+        }
+        
+        .stats-section {
+            display: none;
+            padding: 16px;
+        }
+        
+        .stats-section.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #007AFF;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px;
+            text-align: center;
+            max-width: 300px;
+            width: 100%;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .score-display {
+            font-size: 48px;
+            font-weight: 700;
+            color: #007AFF;
+            margin: 16px 0;
+        }
+        
+        .purchase-modal .modal-content {
+            max-width: 320px;
+        }
+        
+        .purchase-option {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .purchase-option:hover {
+            background: #e9ecef;
+            border-color: #007AFF;
+        }
+        
+        .purchase-option h4 {
+            color: #007AFF;
+            margin-bottom: 4px;
+        }
+        
+        .purchase-option .price {
+            font-size: 18px;
+            font-weight: 600;
+            color: #FF3B30;
+        }
+        
+        .purchase-option .description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .notification-banner {
+            background: #007AFF;
+            color: white;
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .notification-banner.show {
+            display: block;
+        }
+        
+        @media (max-width: 414px) {
+            .container {
+                max-width: 100%;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .back-button {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-button" id="back-btn" onclick="goBack()" style="display: none;">← 戻る</button>
+            <h1 id="header-title">ITパスポート過去問</h1>
+        </div>
+        
+        <div class="ad-banner" id="ad-banner">
+            <span>広告を非表示にする → </span>
+            <button onclick="showPurchaseModal('ad-free')" style="background: none; border: none; color: #007AFF; text-decoration: underline; cursor: pointer;">広告オフ（¥680）</button>
+        </div>
+        
+        <div class="notification-banner" id="daily-notification" onclick="startDailyQuestion()">
+            📚 今日の1問にチャレンジ！
+        </div>
+        
+        <div class="main-content">
+            <div id="main-menu" class="menu-section">
+                <div class="menu-item" onclick="startPractice('random')">
+                    <h3>ランダム出題</h3>
+                    <p>過去問からランダムに10問出題</p>
+                </div>
+                
+                <div class="menu-item" onclick="startPractice('year')">
+                    <h3>年度別出題</h3>
+                    <p>2014年〜2023年の過去問500問から選択</p>
+                </div>
+                
+                <div class="menu-item" onclick="showPurchaseModal('mock-test')">
+                    <h3>模擬試験<span class="premium-badge">有料</span></h3>
+                    <p>本番形式50問（時間制限なし）</p>
+                </div>
+                
+                <div class="menu-item" onclick="showStats()">
+                    <h3>学習進捗</h3>
+                    <p>正解率と累計学習数を確認</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="question-area" class="question-area">
+            <div class="question-header">
+                <span class="question-number">問題 <span id="current-q">1</span> / <span id="total-q">10</span></span>
+                <span class="timer" id="timer" style="display: none;">残り: 120:00</span>
+            </div>
+            
+            <div class="question-text" id="question-text">
+                問題文を読み込み中...
+            </div>
+            
+            <div class="answer-options" id="answer-options">
+            </div>
+            
+            <div class="explanation" id="explanation">
+                <h4>解説</h4>
+                <p id="explanation-text"></p>
+            </div>
+            
+            <div class="buttons">
+                <button class="btn" id="submit-btn" onclick="submitAnswer()">回答する</button>
+                <button class="btn" id="next-btn" onclick="nextQuestion()" style="display: none;">次の問題</button>
+            </div>
+        </div>
+        
+        <div id="stats-section" class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-questions">0</div>
+                    <div class="stat-label">累計学習数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="correct-rate">0%</div>
+                    <div class="stat-label">正解率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="streak-days">0</div>
+                    <div class="stat-label">連続学習日数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-score">0</div>
+                    <div class="stat-label">獲得ポイント</div>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-secondary" onclick="goBack()">メニューに戻る</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 結果モーダル -->
+    <div id="result-modal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">結果発表</h2>
+            <div class="score-display" id="final-score">8/10</div>
+            <p id="result-message">お疲れさまでした！</p>
+            <div class="buttons" style="margin-top: 20px;">
+                <button class="btn" onclick="shareScore()">結果をシェア</button>
+                <button class="btn btn-secondary" onclick="closeModal()">閉じる</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 課金モーダル -->
+    <div id="purchase-modal" class="modal purchase-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">プレミアム機能</h2>
+            
+            <div class="purchase-option" onclick="purchase('ad-free')">
+                <h4>広告オフ</h4>
+                <div class="price">¥680</div>
+                <div class="description">すべての広告を非表示にします</div>
+            </div>
+            
+            <div class="purchase-option" onclick="purchase('mock-test')">
+                <h4>模擬試験パック</h4>
+                <div class="price">¥980</div>
+                <div class="description">本番形式の模擬試験が受けられます</div>
+            </div>
+            
+            <div class="buttons" style="margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="closePurchaseModal()">キャンセル</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionsDB = {
+            2023: [
+                {
+                    id: 1,
+                    question: "企業の競争力を向上させるために、ITを活用して業務プロセスを抜本的に見直し、再構築することを何というか。",
+                    options: ["アウトソーシング", "リエンジニアリング", "ダウンサイジング", "ベンチマーキング"],
+                    correct: 1,
+                    explanation: "リエンジニアリングは、既存の業務プロセスを根本から見直し、ITを活用して抜本的に再構築する手法です。"
+                },
+                {
+                    id: 2,
+                    question: "関係データベースにおいて、表と表の間の関連を定義するために使用されるものはどれか。",
+                    options: ["インデックス", "外部キー", "トリガー", "ビュー"],
+                    correct: 1,
+                    explanation: "外部キー（Foreign Key）は、ある表の列が他の表の主キーを参照することで、表と表の間の関連を定義します。"
+                },
+                {
+                    id: 3,
+                    question: "IoTデバイスが収集したデータを分析して、機械の故障を予測する技術を何というか。",
+                    options: ["予知保全", "予防保全", "事後保全", "定期保全"],
+                    correct: 0,
+                    explanation: "予知保全は、IoTやセンサーデータを活用して機械の状態を監視し、故障の兆候を事前に検知して保全を行う手法です。"
+                },
+                {
+                    id: 4,
+                    question: "GDPR（General Data Protection Regulation）について説明したものはどれか。",
+                    options: ["米国の個人情報保護法", "日本の個人情報保護法", "EU圏の個人情報保護規則", "国際的なセキュリティ基準"],
+                    correct: 2,
+                    explanation: "GDPR（一般データ保護規則）は、2018年にEU圏で施行された個人データの保護に関する包括的な法規則です。"
+                },
+                {
+                    id: 5,
+                    question: "アジャイル開発において、短期間で開発を繰り返す期間を何というか。",
+                    options: ["スプリント", "イテレーション", "タイムボックス", "スクラム"],
+                    correct: 0,
+                    explanation: "スプリントは、アジャイル開発において1〜4週間程度の短期間で開発サイクルを繰り返す期間のことです。"
+                },
+                {
+                    id: 6,
+                    question: "ChatGPTなどの生成AIで使われている技術の基盤はどれか。",
+                    options: ["決定木", "ニューラルネットワーク", "線形回帰", "クラスタリング"],
+                    correct: 1,
+                    explanation: "生成AIの基盤技術はTransformerアーキテクチャに基づくニューラルネットワークです。"
+                },
+                {
+                    id: 7,
+                    question: "サブスクリプションモデルの特徴として適切なものはどれか。",
+                    options: ["一度の支払いで永続利用", "利用量に応じた従量課金", "定期的な利用料金の支払い", "広告収入による無料提供"],
+                    correct: 2,
+                    explanation: "サブスクリプションモデルは、月額や年額などの定期的な料金を支払ってサービスを利用するビジネスモデルです。"
+                },
+                {
+                    id: 8,
+                    question: "デジタルツイン技術の活用例として適切でないものはどれか。",
+                    options: ["工場の生産ライン最適化", "都市計画のシミュレーション", "機械の予知保全", "パスワードの暗号化"],
+                    correct: 3,
+                    explanation: "デジタルツインは現実の物理システムをデジタル空間で再現する技術で、パスワード暗号化とは関係ありません。"
+                },
+                {
+                    id: 9,
+                    question: "ゼロトラスト・セキュリティの基本原則はどれか。",
+                    options: ["境界防御を重視する", "内部ネットワークを信頼する", "すべてを検証する", "パスワードのみで認証する"],
+                    correct: 2,
+                    explanation: "ゼロトラスト・セキュリティは「何も信頼せず、すべてを検証する」という原則に基づく新しいセキュリティモデルです。"
+                },
+                {
+                    id: 10,
+                    question: "NFT（Non-Fungible Token）の特徴として適切なものはどれか。",
+                    options: ["複製可能なデジタル資産", "代替可能な暗号資産", "一意性を持つデジタル証明書", "匿名性が保証される通貨"],
+                    correct: 2,
+                    explanation: "NFTは非代替性トークンで、デジタル資産の唯一性と所有権を証明するブロックチェーン上の証明書です。"
+                },
+                {
+                    id: 11,
+                    question: "メタバースにおけるアバターの役割として適切でないものはどれか。",
+                    options: ["仮想空間での自己表現", "他ユーザーとの交流", "データの暗号化処理", "仮想活動の体験"],
+                    correct: 2,
+                    explanation: "アバターは仮想空間でのユーザーの分身であり、データ暗号化は技術的な処理で直接関係ありません。"
+                },
+                {
+                    id: 12,
+                    question: "Web3.0の特徴として適切なものはどれか。",
+                    options: ["中央集権的なデータ管理", "単方向の情報発信", "分散型インターネット", "テキストベースの情報"],
+                    correct: 2,
+                    explanation: "Web3.0は分散型インターネットを特徴とし、ブロックチェーン技術により中央集権を排除したWebの進化形です。"
+                },
+                {
+                    id: 13,
+                    question: "サステナブルITの取り組みとして適切でないものはどれか。",
+                    options: ["グリーンIT推進", "電力効率化", "リサイクル促進", "データセンター増設"],
+                    correct: 3,
+                    explanation: "サステナブルITは環境負荷軽減を目指すため、単純なデータセンター増設は持続可能性に反します。"
+                },
+                {
+                    id: 14,
+                    question: "エッジコンピューティングの利点として適切なものはどれか。",
+                    options: ["中央集権的処理", "低遅延処理", "高コスト運用", "単一障害点"],
+                    correct: 1,
+                    explanation: "エッジコンピューティングは処理をユーザーに近い場所で行うため、ネットワーク遅延を大幅に削減できます。"
+                },
+                {
+                    id: 15,
+                    question: "量子コンピューティングが得意な処理分野として適切でないものはどれか。",
+                    options: ["暗号解読", "最適化問題", "機械学習", "テキスト編集"],
+                    correct: 3,
+                    explanation: "量子コンピューティングは複雑な計算に適していますが、テキスト編集のような単純作業には不向きです。"
+                },
+                {
+                    id: 16,
+                    question: "デジタルマーケティングにおけるCTRとは何か。",
+                    options: ["顧客獲得率", "クリック率", "コンバージョン率", "継続率"],
+                    correct: 1,
+                    explanation: "CTR（Click Through Rate）は、広告が表示された回数に対してクリックされた回数の割合を示すクリック率です。"
+                },
+                {
+                    id: 17,
+                    question: "マイクロサービスアーキテクチャの特徴として適切なものはどれか。",
+                    options: ["単一の大きなアプリケーション", "サービスの独立したデプロイ", "共有データベース", "同期通信のみ"],
+                    correct: 1,
+                    explanation: "マイクロサービスアーキテクチャでは、各サービスが独立してデプロイ・運用できることが重要な特徴です。"
+                },
+                {
+                    id: 18,
+                    question: "ローコード・ノーコード開発の利点として適切でないものはどれか。",
+                    options: ["開発期間の短縮", "開発コストの削減", "高度なカスタマイズ", "非技術者の開発参加"],
+                    correct: 2,
+                    explanation: "ローコード・ノーコードは簡単な開発を目的としており、複雑で高度なカスタマイズは制限される場合があります。"
+                },
+                {
+                    id: 19,
+                    question: "データガバナンスの目的として適切なものはどれか。",
+                    options: ["データの大量蓄積", "データ品質の管理", "処理速度の向上", "ストレージ容量の拡大"],
+                    correct: 1,
+                    explanation: "データガバナンスは、データの品質、セキュリティ、コンプライアンスを適切に管理することを目的とします。"
+                },
+                {
+                    id: 20,
+                    question: "クラウドネイティブアプリケーションの特徴として適切なものはどれか。",
+                    options: ["オンプレミス専用設計", "モノリシックアーキテクチャ", "コンテナ化された設計", "手動スケーリング"],
+                    correct: 2,
+                    explanation: "クラウドネイティブアプリケーションは、コンテナ技術を活用してクラウド環境で最適に動作するよう設計されます。"
+                },
+                {id: 21, question: "DXの推進において、既存システムの課題として「技術的負債」が指摘されるが、その主な要因はどれか。", options: ["新技術の導入", "レガシーシステムの維持", "セキュリティの強化", "コスト削減"], correct: 1, explanation: "技術的負債は、短期的な解決策を重ねることで蓄積される長期的な問題で、レガシーシステムの維持が主要因です。"},
+                {id: 22, question: "サーキュラーエコノミーにおけるITの役割として適切でないものはどれか。", options: ["リサイクル管理", "資源追跡", "廃棄物最小化", "大量生産促進"], correct: 3, explanation: "サーキュラーエコノミーは循環型経済で、大量生産促進は従来の線形経済モデルです。"},
+                {id: 23, question: "Web3の特徴である「自己主権型アイデンティティ」の利点はどれか。", options: ["企業による管理", "中央集権的認証", "個人によるデータ制御", "政府による監督"], correct: 2, explanation: "自己主権型アイデンティティは、個人が自らのデータと認証情報を制御できる仕組みです。"},
+                {id: 24, question: "量子暗号通信の主な利点はどれか。", options: ["高速通信", "大容量通信", "盗聴検知", "低コスト"], correct: 2, explanation: "量子暗号通信は、盗聴行為自体を物理的に検知できる究極のセキュリティ技術です。"},
+                {id: 25, question: "デジタルヘルスにおけるPHR（Personal Health Record）の特徴はどれか。", options: ["病院管理", "患者自身管理", "政府管理", "保険会社管理"], correct: 1, explanation: "PHRは患者個人が自分の健康情報を管理・活用するシステムです。"},
+                {id: 26, question: "バイオメトリクス認証の課題として適切なものはどれか。", options: ["高精度", "利便性", "プライバシー懸念", "低コスト"], correct: 2, explanation: "バイオメトリクス認証は生体情報を扱うため、プライバシー保護が重要な課題です。"},
+                {id: 27, question: "Industry 4.0における「デジタルファクトリー」の要素として適切でないものはどれか。", options: ["IoT", "AI", "人的作業重視", "ビッグデータ"], correct: 2, explanation: "デジタルファクトリーは自動化・デジタル化が特徴で、従来の人的作業重視とは対照的です。"},
+                {id: 28, question: "プライバシー・バイ・デザインの原則として適切でないものはどれか。", options: ["事後対応", "プロアクティブ", "デフォルト設定", "エンドツーエンド"], correct: 0, explanation: "プライバシー・バイ・デザインは設計段階からの組み込みを重視し、事後対応は原則に反します。"},
+                {id: 29, question: "AR（拡張現実）技術の活用例として適切でないものはどれか。", options: ["作業支援", "教育・研修", "医療診断", "完全仮想空間"], correct: 3, explanation: "ARは現実世界にデジタル情報を重ねる技術で、完全仮想空間はVRの特徴です。"},
+                {id: 30, question: "フィンテックにおける「埋め込み金融」の特徴はどれか。", options: ["銀行店舗拡大", "金融機能の他サービス統合", "現金取引推進", "対面サービス重視"], correct: 1, explanation: "埋め込み金融は、EC サイトやアプリに金融機能を組み込んでシームレスなサービスを提供します。"},
+                {id: 31, question: "サステナブルテクノロジーの目標として適切でないものはどれか。", options: ["環境負荷削減", "社会課題解決", "短期利益最大化", "持続可能性"], correct: 2, explanation: "サステナブルテクノロジーは長期的な持続可能性を重視し、短期利益最大化は目標ではありません。"},
+                {id: 32, question: "ハイブリッドワークモデルの特徴として適切なものはどれか。", options: ["完全在宅勤務", "完全出社勤務", "柔軟な勤務場所選択", "固定勤務時間"], correct: 2, explanation: "ハイブリッドワークは在宅勤務とオフィス勤務を柔軟に組み合わせる働き方です。"},
+                {id: 33, question: "デジタル・バイ・デフォルトの実現における課題として適切でないものはどれか。", options: ["デジタル格差", "セキュリティ", "システム統合", "紙媒体推進"], correct: 3, explanation: "デジタル・バイ・デフォルトはデジタル化推進であり、紙媒体推進は逆行する課題です。"},
+                {id: 34, question: "クリエイターエコノミーにおけるNFTの役割はどれか。", options: ["作品の複製促進", "デジタル所有権証明", "価格統制", "匿名取引"], correct: 1, explanation: "NFTはデジタル作品の唯一性と所有権を証明し、クリエイターの権利保護に貢献します。"},
+                {id: 35, question: "ロボティクスにおける「協働ロボット」の特徴はどれか。", options: ["人間の代替", "人間との協働", "完全自動化", "単独作業"], correct: 1, explanation: "協働ロボット（コボット）は人間と安全に協働できるよう設計されたロボットです。"},
+                {id: 36, question: "デジタルシルバーエコノミーの観点で重要な要素はどれか。", options: ["高齢者排除", "複雑なUI", "アクセシビリティ", "高額課金"], correct: 2, explanation: "高齢者向けデジタルサービスではアクセシビリティ（利用しやすさ）が最重要です。"},
+                {id: 37, question: "カーボンフットプリント可視化システムの主な目的はどれか。", options: ["CO2排出量隠蔽", "環境負荷の定量化", "エネルギー消費増大", "規制回避"], correct: 1, explanation: "カーボンフットプリント可視化は、製品・サービスの環境負荷を定量化し、削減につなげることが目的です。"},
+                {id: 38, question: "次世代インターネット「Internet of Everything (IoE)」の特徴はどれか。", options: ["デバイスのみ接続", "人・プロセス・データ・モノの統合接続", "有線接続限定", "単方向通信"], correct: 1, explanation: "IoEは人、プロセス、データ、モノすべてを知的に接続する包括的概念です。"},
+                {id: 39, question: "デジタルエンパワーメントの目標として適切でないものはどれか。", options: ["デジタル格差解消", "ICTスキル向上", "技術依存促進", "社会参加拡大"], correct: 2, explanation: "デジタルエンパワーメントは自立支援が目標で、技術依存促進は逆効果です。"},
+                {id: 40, question: "スマートマニュファクチャリングにおける「デジタルツイン」の活用目的として適切でないものはどれか。", options: ["予測保全", "工程最適化", "品質向上", "手作業増加"], correct: 3, explanation: "デジタルツインは製造業のデジタル化・自動化を促進し、手作業の増加とは逆の効果をもたらします。"},
+                {id: 41, question: "メタバースにおける「アバターエコノミー」の特徴はどれか。", options: ["現実経済とは無関係", "仮想空間内での経済活動", "物理的商品のみ取引", "現金決済限定"], correct: 1, explanation: "アバターエコノミーは、メタバース内でアバターを通じて行う仮想的な経済活動です。"},
+                {id: 42, question: "エッジAIの利点として適切でないものはどれか。", options: ["低遅延処理", "プライバシー保護", "ネットワーク負荷軽減", "高い計算能力"], correct: 3, explanation: "エッジAIは端末側での軽量処理が特徴で、クラウドほどの高い計算能力は持ちません。"},
+                {id: 43, question: "デジタル・サステナビリティの取り組み例として適切でないものはどれか。", options: ["グリーンソフトウェア開発", "エネルギー効率改善", "データセンター最適化", "無制限データ収集"], correct: 3, explanation: "デジタル・サステナビリティでは、必要最小限のデータ収集と効率的な活用が重要です。"},
+                {id: 44, question: "ヒューマンオーグメンテーション技術の例として適切でないものはどれか。", options: ["パワードスーツ", "脳コンピュータインタフェース", "AR眼鏡", "自動運転車"], correct: 3, explanation: "ヒューマンオーグメンテーションは人間能力の拡張技術で、自動運転車は人間の代替技術です。"},
+                {id: 45, question: "レスポンシブルAIの実現において重要でない要素はどれか。", options: ["透明性", "説明可能性", "公平性", "利益最大化"], correct: 3, explanation: "レスポンシブルAI（責任あるAI）では、技術的・倫理的責任が重要で、単純な利益最大化は含まれません。"},
+                {id: 46, question: "デジタルノマドワークスタイルの特徴として適切でないものはどれか。", options: ["場所に依存しない働き方", "ICT活用", "柔軟性", "固定オフィス必須"], correct: 3, explanation: "デジタルノマドは場所に縛られない働き方で、固定オフィスを必要としません。"},
+                {id: 47, question: "ソーシャルコマースの特徴として適切なものはどれか。", options: ["SNS上での商取引", "個人間取引禁止", "オフライン販売のみ", "現金決済限定"], correct: 0, explanation: "ソーシャルコマースは、SNSプラットフォーム上で行われる商取引のことです。"},
+                {id: 48, question: "デジタルフォレンジックの主な目的はどれか。", options: ["データ削除", "証拠保全・分析", "システム高速化", "コスト削減"], correct: 1, explanation: "デジタルフォレンジックは、デジタル機器から法的証拠を保全・分析する技術です。"},
+                {id: 49, question: "クラウドセキュリティにおける「ゼロトラストネットワーク」の基本概念はどれか。", options: ["内部ネットワーク全面信頼", "境界防御重視", "すべてのアクセスを検証", "パスワード認証のみ"], correct: 2, explanation: "ゼロトラストネットワークは「何も信用せず、常に検証する」という原則に基づきます。"},
+                {id: 50, question: "デジタルインクルージョンの推進において重要でない要素はどれか。", options: ["アクセシビリティ改善", "デジタルリテラシー教育", "多言語対応", "高額機器強制"], correct: 3, explanation: "デジタルインクルージョンは誰もがデジタル技術を利用できる環境づくりで、高額機器の強制は逆効果です。"}
+            ],
+            2022: [
+                {
+                    id: 21,
+                    question: "システム開発プロジェクトにおいて、要求定義工程の次に行われる工程はどれか。",
+                    options: ["基本設計", "詳細設計", "プログラミング", "結合テスト"],
+                    correct: 0,
+                    explanation: "システム開発では、要求定義の後に基本設計工程を行い、システム全体の構造や機能を設計します。"
+                },
+                {
+                    id: 22,
+                    question: "クラウドサービスのうち、アプリケーションの実行環境を提供するサービスモデルはどれか。",
+                    options: ["IaaS", "PaaS", "SaaS", "DaaS"],
+                    correct: 1,
+                    explanation: "PaaS（Platform as a Service）は、アプリケーションの開発・実行環境をクラウドで提供するサービスモデルです。"
+                },
+                {
+                    id: 23,
+                    question: "情報セキュリティの3要素に含まれないものはどれか。",
+                    options: ["機密性", "完全性", "可用性", "透明性"],
+                    correct: 3,
+                    explanation: "情報セキュリティの3要素（CIA）は、機密性（Confidentiality）、完全性（Integrity）、可用性（Availability）です。"
+                },
+                {
+                    id: 24,
+                    question: "データベースの正規化の目的として適切なものはどれか。",
+                    options: ["処理速度の向上", "記憶容量の削減", "データの重複排除", "セキュリティの向上"],
+                    correct: 2,
+                    explanation: "データベースの正規化は、データの重複や矛盾を排除し、データの整合性を保つことが主な目的です。"
+                },
+                {
+                    id: 25,
+                    question: "RPA（Robotic Process Automation）の特徴として適切なものはどれか。",
+                    options: ["人工知能による判断", "定型業務の自動化", "音声認識機能", "画像解析機能"],
+                    correct: 1,
+                    explanation: "RPAは、定型的で反復的な業務プロセスをソフトウェアロボットによって自動化する技術です。"
+                },
+                {
+                    id: 26,
+                    question: "テレワークのセキュリティ対策として最も重要なものはどれか。",
+                    options: ["高性能なPC", "VPN接続", "大画面モニター", "高速インターネット"],
+                    correct: 1,
+                    explanation: "テレワークでは、VPN（Virtual Private Network）による安全な通信路の確保が最も重要なセキュリティ対策です。"
+                },
+                {
+                    id: 27,
+                    question: "SaaSの利用における主な利点はどれか。",
+                    options: ["ソフトウェアの所有", "カスタマイズの自由度", "初期費用の削減", "オフライン利用"],
+                    correct: 2,
+                    explanation: "SaaS（Software as a Service）は、クラウド上のソフトウェアを利用するため、初期費用を大幅に削減できます。"
+                },
+                {
+                    id: 28,
+                    question: "アジャイル開発の「スクラム」において、開発チームの進捗を確認する短時間の会議を何というか。",
+                    options: ["スプリントレビュー", "デイリースタンドアップ", "スプリント計画", "レトロスペクティブ"],
+                    correct: 1,
+                    explanation: "デイリースタンドアップは、スクラムにおいて毎日行う短時間（15分程度）の進捗確認会議です。"
+                },
+                {
+                    id: 29,
+                    question: "データ分析におけるBIツールの目的として適切なものはどれか。",
+                    options: ["データの暗号化", "意思決定の支援", "システム監視", "ネットワーク管理"],
+                    correct: 1,
+                    explanation: "BI（Business Intelligence）ツールは、蓄積されたデータを分析・可視化し、経営の意思決定を支援することが目的です。"
+                },
+                {
+                    id: 30,
+                    question: "コンテナ技術の代表的な実装として知られるものはどれか。",
+                    options: ["VMware", "Docker", "Hyper-V", "VirtualBox"],
+                    correct: 1,
+                    explanation: "Dockerは、アプリケーションとその実行環境を軽量にパッケージ化するコンテナ技術の代表的な実装です。"
+                },
+                {
+                    id: 31,
+                    question: "フィンテック（FinTech）サービスの例として適切でないものはどれか。",
+                    options: ["スマホ決済", "仮想通貨取引", "オンライン家計簿", "動画配信サービス"],
+                    correct: 3,
+                    explanation: "フィンテックは金融（Finance）と技術（Technology）の融合で、動画配信サービスは金融サービスではありません。"
+                },
+                {
+                    id: 32,
+                    question: "ITサービス管理における「インシデント」とは何か。",
+                    options: ["計画されたシステム停止", "サービスの品質低下や中断", "新機能の追加", "定期メンテナンス"],
+                    correct: 1,
+                    explanation: "インシデントは、ITサービスの品質低下やサービス中断など、計画外の事象を指します。"
+                },
+                {
+                    id: 33,
+                    question: "ランサムウェア攻撃への対策として最も有効なものはどれか。",
+                    options: ["パスワードの複雑化", "定期的なバックアップ", "アンチウイルスソフト", "ファイアウォール"],
+                    correct: 1,
+                    explanation: "ランサムウェア攻撃でデータが暗号化されても、定期的なバックアップがあれば復旧が可能です。"
+                },
+                {
+                    id: 34,
+                    question: "デジタル庁の設置目的として適切なものはどれか。",
+                    options: ["IT企業の監督", "デジタル社会の実現", "インターネット規制", "サイバー攻撃"],
+                    correct: 1,
+                    explanation: "デジタル庁は、行政のデジタル化を推進し、デジタル社会の実現を目的として2021年に設置されました。"
+                },
+                {
+                    id: 35,
+                    question: "マイナンバーカードの利用目的として適切でないものはどれか。",
+                    options: ["本人確認", "e-Tax申告", "健康保険証", "クレジット決済"],
+                    correct: 3,
+                    explanation: "マイナンバーカードは公的な身分証明書であり、民間のクレジット決済機能は含まれていません。"
+                },
+                {
+                    id: 36,
+                    question: "Society 5.0で実現される社会の特徴はどれか。",
+                    options: ["工業中心社会", "情報社会", "サイバー・フィジカル融合社会", "農業中心社会"],
+                    correct: 2,
+                    explanation: "Society 5.0は、サイバー空間とフィジカル空間を融合させた新たな社会を目指すコンセプトです。"
+                },
+                {
+                    id: 37,
+                    question: "オープンデータの活用効果として期待されないものはどれか。",
+                    options: ["透明性の向上", "イノベーション創出", "個人情報の保護", "行政効率化"],
+                    correct: 2,
+                    explanation: "オープンデータは公開データの活用を促進するもので、個人情報保護とは直接関係ありません。"
+                },
+                {
+                    id: 38,
+                    question: "SDGsとITの関係で適切でないものはどれか。",
+                    options: ["教育格差の解消", "環境負荷の削減", "利益の最大化", "医療アクセス改善"],
+                    correct: 2,
+                    explanation: "SDGs（持続可能な開発目標）は社会課題の解決を目指すもので、単純な利益最大化が目的ではありません。"
+                },
+                {
+                    id: 39,
+                    question: "DXレポートで指摘された「2025年の崖」とは何か。",
+                    options: ["人口減少", "既存システムの維持困難", "地球温暖化", "労働力不足"],
+                    correct: 1,
+                    explanation: "「2025年の崖」は、レガシーシステムの維持が困難になり、経済損失が発生するリスクを指します。"
+                },
+                {
+                    id: 40,
+                    question: "ESG経営においてITが貢献できる分野として適切でないものはどれか。",
+                    options: ["CO2排出量の可視化", "リモートワーク推進", "デジタル格差拡大", "サプライチェーン管理"],
+                    correct: 2,
+                    explanation: "ESG経営では環境・社会・企業統治の改善を目指すため、デジタル格差の拡大は適切ではありません。"
+                }
+            ],
+            2021: [
+                {id: 41, question: "DXの実現において重要な要素として適切でないものはどれか。", options: ["データの活用", "業務プロセスの変革", "ITインフラの更新", "従来システムの維持"], correct: 3, explanation: "DX（デジタルトランスフォーメーション）では、従来システムの維持ではなく、デジタル技術を活用した抜本的な変革が重要です。"},
+                {id: 42, question: "APIについて説明したものとして適切なものはどれか。", options: ["アプリケーション同士をつなぐインタフェース", "データベース管理システム", "プログラミング言語", "セキュリティ対策技術"], correct: 0, explanation: "API（Application Programming Interface）は、異なるアプリケーション間でデータや機能を連携させるためのインタフェースです。"},
+                {id: 43, question: "DevOpsの目的として適切なものはどれか。", options: ["開発コストの削減", "開発と運用の連携強化", "プログラマの技術向上", "システムの高機能化"], correct: 1, explanation: "DevOpsは、開発（Development）と運用（Operations）の連携を強化し、迅速で継続的なサービス提供を実現することを目的とします。"},
+                {id: 44, question: "機械学習において、正解データを用いて学習させる手法を何というか。", options: ["教師あり学習", "教師なし学習", "強化学習", "深層学習"], correct: 0, explanation: "教師あり学習は、正解（ラベル）が付いたデータセットを用いてモデルを学習させる機械学習の手法です。"},
+                {id: 45, question: "企業のIT投資効果を測定する指標として適切なものはどれか。", options: ["ROI", "KPI", "SLA", "SLO"], correct: 0, explanation: "ROI（Return on Investment）は、投資に対する収益率を示す指標で、IT投資効果の測定によく使用されます。"},
+                {id: 46, question: "クラウド・バイ・デフォルト原則とは何か。", options: ["クラウドサービスの安全性確保", "政府システムのクラウド優先採用", "クラウド事業者の認定制度", "データセンター集約化"], correct: 1, explanation: "クラウド・バイ・デフォルトは、政府情報システムにおいてクラウドサービスの利用を第一候補とする原則です。"},
+                {id: 47, question: "AI倫理の観点で重要な原則として適切でないものはどれか。", options: ["透明性", "公平性", "効率性", "説明可能性"], correct: 2, explanation: "AI倫理では透明性、公平性、説明可能性が重要で、単純な効率性の追求は倫理的課題を引き起こす可能性があります。"},
+                {id: 48, question: "個人情報保護法における「仮名加工情報」の特徴はどれか。", options: ["完全匿名化されている", "特定の個人を識別できない", "暗号化されている", "削除されている"], correct: 1, explanation: "仮名加工情報は、個人情報を加工して特定の個人を識別できないようにした情報です。"},
+                {id: 49, question: "GIGAスクール構想の主な目的はどれか。", options: ["教員の働き方改革", "学校施設の近代化", "ICT教育環境の整備", "教育予算の削減"], correct: 2, explanation: "GIGAスクール構想は、児童生徒1人1台端末を実現し、ICT教育環境を整備することが主な目的です。"},
+                {id: 50, question: "デジタル・ガバメントにおける「ワンスオンリー」原則とは何か。", options: ["一度の申請で完結", "同じ情報の重複提出不要", "単一窓口での対応", "一元的なデータ管理"], correct: 1, explanation: "ワンスオンリー原則は、一度提出した情報を他の手続きでも活用し、重複提出を不要にする原則です。"},
+                {id: 51, question: "サイバーセキュリティ基本法の目的として適切でないものはどれか。", options: ["国民の安全確保", "経済発展の促進", "個人の監視強化", "国際協力の推進"], correct: 2, explanation: "サイバーセキュリティ基本法は国民の安全と経済発展を目的とし、個人の監視強化は目的ではありません。"},
+                {id: 52, question: "パンデミック対応でのIT活用例として適切でないものはどれか。", options: ["接触確認アプリ", "ワクチン接種管理システム", "テレワーク推進", "対面会議の強制"], correct: 3, explanation: "パンデミック対応では感染防止のため、対面会議ではなくオンライン会議が推進されます。"},
+                {id: 53, question: "スマートシティの構成要素として適切でないものはどれか。", options: ["IoTセンサー", "ビッグデータ解析", "人工知能", "紙ベースの管理"], correct: 3, explanation: "スマートシティはデジタル技術を活用するため、紙ベースの管理は構成要素として適切ではありません。"},
+                {id: 54, question: "カーボンニュートラルにおけるITの役割として適切でないものはどれか。", options: ["エネルギー効率化", "スマートグリッド", "リモートワーク推進", "電力消費量増大"], correct: 3, explanation: "カーボンニュートラル実現には電力消費量の削減が重要で、増大は適切ではありません。"},
+                {id: 55, question: "デジタル・ディバイドの要因として適切でないものはどれか。", options: ["経済格差", "年齢格差", "地域格差", "ITスキル向上"], correct: 3, explanation: "デジタル・ディバイドはIT格差の問題で、ITスキル向上は格差解消の要因です。"},
+                {id: 56, question: "クラウドファースト政策の背景にある課題はどれか。", options: ["セキュリティ強化", "コスト削減", "レガシーシステム刷新", "すべて該当"], correct: 3, explanation: "クラウドファースト政策は、セキュリティ、コスト、レガシー刷新すべての課題解決を目指します。"},
+                {id: 57, question: "5Gの社会実装で期待される分野として適切でないものはどれか。", options: ["自動運転", "遠隔医療", "スマート工場", "文書管理"], correct: 3, explanation: "5Gは高速・低遅延が特徴で、自動運転や遠隔医療などリアルタイム性が重要な分野で活用されます。"},
+                {id: 58, question: "データ駆動型社会の実現に必要な要素として適切でないものはどれか。", options: ["データ品質向上", "プライバシー保護", "人材育成", "データ独占"], correct: 3, explanation: "データ駆動型社会では、データの適切な活用と共有が重要で、独占は社会全体の利益に反します。"},
+                {id: 59, question: "行政DXの推進における「デジタル・バイ・デフォルト」の意味はどれか。", options: ["書面申請の優先", "デジタル申請の標準化", "対面対応の重視", "従来手続きの維持"], correct: 1, explanation: "デジタル・バイ・デフォルトは、行政手続きをデジタルで完結することを標準とする原則です。"},
+                {id: 60, question: "次世代モビリティサービスMaaSの構成要素として適切でないものはどれか。", options: ["経路検索", "予約・決済", "複数交通手段連携", "自家用車販売"], correct: 3, explanation: "MaaSは複数の交通サービスを統合するサービスで、自家用車販売は直接の構成要素ではありません。"}
+            ],
+            2020: [
+                {id: 81, question: "5Gの特徴として適切でないものはどれか。", options: ["高速大容量通信", "低遅延通信", "多数同時接続", "低消費電力"], correct: 3, explanation: "5Gの主な特徴は、高速大容量通信、低遅延通信、多数同時接続です。低消費電力は直接的な特徴ではありません。"},
+                {id: 82, question: "ビッグデータの特徴を表す「3V」に含まれないものはどれか。", options: ["Volume", "Velocity", "Variety", "Visibility"], correct: 3, explanation: "ビッグデータの3Vは、Volume（量）、Velocity（速度）、Variety（多様性）を指します。"},
+                {id: 83, question: "プロジェクトマネジメントにおけるWBSの目的はどれか。", options: ["作業の詳細化と構造化", "スケジュールの作成", "リスクの特定", "品質の管理"], correct: 0, explanation: "WBS（Work Breakdown Structure）は、プロジェクトの作業を詳細化し、階層的に構造化する手法です。"},
+                {id: 84, question: "情報システムの可用性を高める技術として適切なものはどれか。", options: ["負荷分散", "データ暗号化", "アクセス制御", "ウイルス対策"], correct: 0, explanation: "負荷分散は、複数のサーバに処理を分散させることで、システムの可用性を高める技術です。"},
+                {id: 85, question: "eコマースにおけるロングテール現象とは何か。", options: ["人気商品の売上増加", "ニッチ商品の売上機会拡大", "配送時間の短縮", "決済手段の多様化"], correct: 1, explanation: "ロングテール現象は、インターネット販売により、従来は売れにくかったニッチ商品も売上機会を得られる現象です。"},
+                {id: 86, question: "コロナ禍でのITの役割として重要でなかったものはどれか。", options: ["テレワーク推進", "オンライン会議", "EC拡大", "対面販売強化"], correct: 3, explanation: "コロナ禍では感染対策のため、対面販売よりもオンライン・非接触サービスが重要でした。"},
+                {id: 87, question: "クラウドファースト戦略の利点として適切でないものはどれか。", options: ["初期費用削減", "スケーラビリティ", "ベンダーロックイン", "運用負荷軽減"], correct: 2, explanation: "ベンダーロックインはクラウドのリスクであり、利点ではありません。"},
+                {id: 88, question: "IoTセンサーデータの活用例として適切でないものはどれか。", options: ["予知保全", "環境監視", "在庫管理", "手動データ入力"], correct: 3, explanation: "IoTの目的は自動化であり、手動データ入力は従来型の非効率な手法です。"},
+                {id: 89, question: "API設計における重要な原則はどれか。", options: ["複雑性重視", "RESTful設計", "独自仕様", "バージョン管理無視"], correct: 1, explanation: "RESTful設計は、統一的で理解しやすいAPIの標準的な設計原則です。"},
+                {id: 90, question: "マイクロサービスアーキテクチャの課題として適切なものはどれか。", options: ["単一障害点", "サービス間通信複雑化", "スケールしにくい", "技術統一強制"], correct: 1, explanation: "マイクロサービスでは、サービス間の通信やデータ整合性の管理が複雑になる課題があります。"},
+                {id: 91, question: "データレイクとデータウェアハウスの違いとして正しいものはどれか。", options: ["データレイクは構造化データのみ", "データレイクは非構造化データも格納可能", "用途は同じ", "データレイクの方が高コスト"], correct: 1, explanation: "データレイクは構造化・非構造化データの両方を格納でき、柔軟性が高いのが特徴です。"},
+                {id: 92, question: "DevSecOpsの目的として適切なものはどれか。", options: ["セキュリティを後回し", "開発にセキュリティを組み込み", "セキュリティ専門チーム任せ", "リリース速度重視のみ"], correct: 1, explanation: "DevSecOpsは開発初期段階からセキュリティを組み込み、継続的なセキュリティ確保を目指します。"},
+                {id: 93, question: "コンテナオーケストレーションツールの代表例はどれか。", options: ["Docker", "Kubernetes", "Git", "Jenkins"], correct: 1, explanation: "Kubernetesは複数のコンテナを管理・運用するオーケストレーションツールの代表格です。"},
+                {id: 94, question: "NoSQLデータベースの特徴として適切でないものはどれか。", options: ["水平スケーラビリティ", "柔軟なスキーマ", "ACID特性重視", "ビッグデータ対応"], correct: 2, explanation: "NoSQLは性能とスケーラビリティを重視し、厳密なACID特性よりもCAP定理のトレードオフを考慮します。"},
+                {id: 95, question: "サーバーレスコンピューティングの利点として適切でないものはどれか。", options: ["従量課金", "自動スケーリング", "サーバー管理不要", "長時間処理に最適"], correct: 3, explanation: "サーバーレスは短時間の処理に最適化されており、長時間処理には制約があります。"},
+                {id: 96, question: "GraphQL の特徴として適切なものはどれか。", options: ["必要なデータのみ取得可能", "RESTより常に高速", "SQLの代替", "データベース技術"], correct: 0, explanation: "GraphQLはクライアントが必要なデータのみを指定して取得できるクエリ言語です。"},
+                {id: 97, question: "PWA（Progressive Web App）の特徴として適切でないものはどれか。", options: ["オフライン動作", "プッシュ通知", "ネイティブアプリより高性能", "Webベース"], correct: 2, explanation: "PWAはWebベースのため、ネイティブアプリほどの高性能は期待できません。"},
+                {id: 98, question: "CI/CDパイプラインの目的として適切でないものはどれか。", options: ["継続的インテグレーション", "自動テスト", "手動デプロイ推進", "品質向上"], correct: 2, explanation: "CI/CDは継続的なデプロイの自動化を目指し、手動デプロイとは逆の概念です。"},
+                {id: 99, question: "WebAssembly（WASM）の特徴はどれか。", options: ["JavaScript代替", "ブラウザで高性能実行", "サーバーサイド専用", "データベース言語"], correct: 1, explanation: "WebAssemblyはブラウザ上でネイティブレベルの高性能実行を可能にする技術です。"},
+                {id: 100, question: "機械学習のMLOpsが解決する課題はどれか。", options: ["モデル学習の高速化", "機械学習の運用管理", "データ収集の自動化", "アルゴリズムの発明"], correct: 1, explanation: "MLOpsは機械学習モデルの継続的な開発、デプロイ、運用管理を効率化する手法です。"},
+                {id: 101, question: "エッジコンピューティングでの処理に向いているものはどれか。", options: ["複雑なバッチ処理", "リアルタイム画像認識", "大規模データ分析", "長時間学習"], correct: 1, explanation: "エッジコンピューティングは低遅延が求められるリアルタイム処理に最適です。"},
+                {id: 102, question: "ゼロダウンタイムデプロイの手法として適切でないものはどれか。", options: ["ブルーグリーンデプロイ", "カナリアデプロイ", "ローリングデプロイ", "一斉停止デプロイ"], correct: 3, explanation: "一斉停止デプロイはサービス停止を伴うため、ゼロダウンタイムデプロイではありません。"},
+                {id: 103, question: "APIゲートウェイの役割として適切でないものはどれか。", options: ["認証・認可", "レート制限", "ルーティング", "データベース操作"], correct: 3, explanation: "APIゲートウェイはAPI管理に特化しており、データベース操作は背後のサービスが担当します。"},
+                {id: 104, question: "イミュータブルインフラストラクチャの特徴はどれか。", options: ["設定変更可能", "インフラ不変性", "手動設定重視", "状態管理複雑"], correct: 1, explanation: "イミュータブルインフラストラクチャは、一度構築したインフラを変更せず、新規作成で対応する手法です。"},
+                {id: 105, question: "オブザーバビリティの3本柱に含まれないものはどれか。", options: ["メトリクス", "ログ", "トレース", "テスト"], correct: 3, explanation: "オブザーバビリティの3本柱は、メトリクス、ログ、トレースです。"},
+                {id: 106, question: "フェデレーション学習の特徴として適切なものはどれか。", options: ["中央集権的学習", "データを移動せずに学習", "単一モデルのみ", "プライバシー軽視"], correct: 1, explanation: "フェデレーション学習は、データを移動させず分散環境で学習を行うプライバシー保護技術です。"},
+                {id: 107, question: "Jamstackアーキテクチャの特徴として適切でないものはどれか。", options: ["JavaScript", "APIs", "Markup", "Database"], correct: 3, explanation: "JamstackはJavaScript、APIs、Markup の組み合わせで、従来のデータベースに依存しない構成です。"},
+                {id: 108, question: "Infrastructure as Code（IaC）のツールとして適切でないものはどれか。", options: ["Terraform", "CloudFormation", "Ansible", "MySQL"], correct: 3, explanation: "MySQLはデータベースシステムで、Infrastructure as Code のツールではありません。"},
+                {id: 109, question: "Service Meshの利点として適切でないものはどれか。", options: ["サービス間通信管理", "セキュリティ強化", "オブザーバビリティ向上", "単一障害点削減"], correct: 3, explanation: "Service Meshは通信を一元管理するため、構成によっては単一障害点になるリスクがあります。"},
+                {id: 110, question: "カオスエンジニアリングの目的はどれか。", options: ["システム破壊", "障害耐性確認", "性能劣化", "セキュリティ侵害"], correct: 1, explanation: "カオスエンジニアリングは意図的に障害を発生させて、システムの障害耐性を確認・改善する手法です。"},
+                {id: 111, question: "WebRTCの主な用途はどれか。", options: ["データベース操作", "リアルタイム通信", "静的サイト生成", "バッチ処理"], correct: 1, explanation: "WebRTCはブラウザ間でのリアルタイムな音声・映像通信を可能にする技術です。"},
+                {id: 112, question: "ヘッドレスCMSの特徴として適切なものはどれか。", options: ["フロントエンド固定", "API経由でコンテンツ配信", "デザイン制約多", "レスポンシブ対応困難"], correct: 1, explanation: "ヘッドレスCMSはAPIでコンテンツを配信し、フロントエンドの自由度が高いのが特徴です。"},
+                {id: 113, question: "Serverless Frameworkの目的はどれか。", options: ["サーバー構築", "サーバーレス開発支援", "データベース管理", "ネットワーク設定"], correct: 1, explanation: "Serverless Frameworkはサーバーレスアプリケーションの開発・デプロイを支援するツールです。"},
+                {id: 114, question: "Multi-cloud戦略のリスクとして適切なものはどれか。", options: ["ベンダーロックイン回避", "管理複雑化", "コスト削減", "可用性向上"], correct: 1, explanation: "Multi-cloudは複数のクラウドサービスを利用するため、管理が複雑になるリスクがあります。"},
+                {id: 115, question: "GitOpsの特徴として適切なものはどれか。", options: ["GitでインフラとアプリをJava管理", "デプロイの自動化", "コード品質向上", "すべて正しい"], correct: 3, explanation: "GitOpsはGitを真の情報源とし、インフラとアプリケーションの宣言的管理とデプロイ自動化を実現します。"},
+                {id: 116, question: "Event-driven Architectureの利点として適切でないものはどれか。", options: ["疎結合", "スケーラビリティ", "リアルタイム処理", "同期処理強制"], correct: 3, explanation: "Event-driven Architectureは非同期処理が基本で、同期処理の強制は設計思想に反します。"},
+                {id: 117, question: "Feature Flagの主な用途はどれか。", options: ["機能の段階的リリース", "セキュリティ向上", "性能改善", "コスト削減"], correct: 0, explanation: "Feature Flagは機能のON/OFFを制御し、段階的リリースやA/Bテストを可能にする仕組みです。"},
+                {id: 118, question: "CQRS（Command Query Responsibility Segregation）の目的はどれか。", options: ["読み取りと書き込みの分離", "データ暗号化", "認証強化", "ネットワーク最適化"], correct: 0, explanation: "CQRSは読み取り（Query）と書き込み（Command）の責任を分離し、それぞれを最適化する設計パターンです。"},
+                {id: 119, question: "Distributed Tracingの目的はどれか。", options: ["分散システムの処理追跡", "データ分散", "負荷分散", "地理的分散"], correct: 0, explanation: "Distributed Tracingは分散システム内でのリクエスト処理の流れを追跡し、性能問題の特定に使用します。"},
+                {id: 120, question: "Backpressureハンドリングが重要となるシステムはどれか。", options: ["バッチ処理システム", "ストリーミング処理システム", "静的Webサイト", "データベース"], correct: 1, explanation: "Backpressureは処理能力を超えるデータ流入時の制御で、ストリーミング処理システムで特に重要です。"},
+                {id: 121, question: "Time Series Database の特徴として適切でないものはどれか。", options: ["時間軸データ特化", "高速書き込み", "ACID特性重視", "圧縮効率"], correct: 2, explanation: "Time Series Database は大量の時系列データを効率的に処理することが重視され、厳密なACID特性よりも性能を優先します。"},
+                {id: 122, question: "Circuit Breaker パターンの目的はどれか。", options: ["障害の連鎖防止", "セキュリティ強化", "性能向上", "コスト削減"], correct: 0, explanation: "Circuit Breakerパターンは障害が発生したサービスへの呼び出しを一時的に停止し、障害の連鎖を防ぐ設計パターンです。"},
+                {id: 123, question: "Event Sourcingの特徴として適切なものはどれか。", options: ["現在の状態のみ保存", "イベント履歴をすべて保存", "データ削除重視", "リアルタイム処理専用"], correct: 1, explanation: "Event Sourcingはすべての状態変更をイベントとして記録し、現在の状態をイベント履歴から復元する手法です。"},
+                {id: 124, question: "Database Per Service パターンのトレードオフはどれか。", options: ["データ整合性管理の複雑化", "性能向上", "開発効率化", "運用簡素化"], correct: 0, explanation: "各サービスが独自のデータベースを持つため、サービス間のデータ整合性管理が複雑になります。"},
+                {id: 125, question: "Blue-Green Deployment の課題として適切なものはどれか。", options: ["リソース使用量倍増", "ダウンタイム発生", "ロールバック困難", "テスト不可"], correct: 0, explanation: "Blue-Green Deploymentでは本番環境と同じ環境を2つ維持するため、リソース使用量が倍増します。"},
+                {id: 126, question: "Saga パターンが解決する課題はどれか。", options: ["分散トランザクション管理", "認証・認可", "ロードバランシング", "データ暗号化"], correct: 0, explanation: "Sagaパターンは分散システムにおける長時間実行トランザクションの整合性を管理する設計パターンです。"},
+                {id: 127, question: "Materialized View の利点として適切なものはどれか。", options: ["クエリ性能向上", "ストレージ使用量削減", "リアルタイム更新", "複雑性軽減"], correct: 0, explanation: "Materialized Viewは事前に計算された結果を保存することで、複雑なクエリの性能を大幅に向上させます。"},
+                {id: 128, question: "Content Delivery Network (CDN) のキャッシュ戦略として適切でないものはどれか。", options: ["TTL設定", "パージ機能", "地理的分散", "動的コンテンツ中心"], correct: 3, explanation: "CDNは静的コンテンツのキャッシュに最適化されており、動的コンテンツの配信は効果が限定的です。"},
+                {id: 129, question: "Database Sharding の課題として適切なものはどれか。", options: ["クエリの複雑化", "可用性向上", "性能向上", "運用簡素化"], correct: 0, explanation: "Database Shardingでは複数のシャードにまたがるクエリが複雑になり、開発・運用の難易度が上がります。"},
+                {id: 130, question: "Microservices における Data Consistency の課題を解決するパターンはどれか。", options: ["Eventual Consistency", "Strong Consistency", "Immediate Consistency", "No Consistency"], correct: 0, explanation: "マイクロサービスでは結果整合性（Eventual Consistency）を受け入れ、最終的にデータの整合性が保たれるアプローチが一般的です。"}
+            ],
+            2019: [
+                {id: 86, question: "AIの活用分野として適切でないものはどれか。", options: ["画像認識", "音声認識", "自然言語処理", "電力消費量削減"], correct: 3, explanation: "画像認識、音声認識、自然言語処理はAIの代表的な活用分野です。電力消費量削減は直接的なAI技術ではありません。"},
+                {id: 87, question: "ブロックチェーンの特徴として適切なものはどれか。", options: ["中央集権的管理", "改ざん困難性", "高速処理", "低コスト運用"], correct: 1, explanation: "ブロックチェーンは、分散型台帳技術により改ざんが困難な仕組みを実現していることが主要な特徴です。"},
+                {id: 88, question: "情報セキュリティポリシーの策定において最初に行うべきことはどれか。", options: ["技術的対策の検討", "組織体制の構築", "リスクアセスメント", "従業員教育の実施"], correct: 2, explanation: "情報セキュリティポリシー策定では、まずリスクアセスメントを行い、組織が直面するリスクを特定・評価することが重要です。"},
+                {id: 89, question: "システム開発におけるV字モデルの特徴はどれか。", options: ["開発工程とテスト工程の対応関係が明確", "短期間での開発が可能", "要求変更に柔軟に対応", "プロトタイプを重視"], correct: 0, explanation: "V字モデルは、開発工程（要求定義、基本設計等）と対応するテスト工程（結合テスト、システムテスト等）の関係を明確にしたモデルです。"},
+                {id: 90, question: "マーケティングにおけるCRMの目的はどれか。", options: ["新規顧客の獲得", "顧客との関係強化", "製品価格の最適化", "在庫管理の効率化"], correct: 1, explanation: "CRM（Customer Relationship Management）は、顧客との関係を管理・強化し、長期的な顧客価値の向上を目指すシステムです。"}
+            ],
+            2018: [
+                {
+                    id: 26,
+                    question: "オープンソースソフトウェアの特徴として適切でないものはどれか。",
+                    options: ["ソースコードが公開されている", "無償で利用できる", "商用利用が禁止されている", "コミュニティによる開発"],
+                    correct: 2,
+                    explanation: "オープンソースソフトウェアは、一般的に商用利用も可能です。ライセンスによって条件は異なりますが、商用利用が禁止されているわけではありません。"
+                },
+                {
+                    id: 27,
+                    question: "IT投資におけるTCOに含まれるコストはどれか。",
+                    options: ["初期導入費用のみ", "運用・保守費用のみ", "初期導入費用と運用・保守費用の合計", "人件費のみ"],
+                    correct: 2,
+                    explanation: "TCO（Total Cost of Ownership）は、システムの導入から廃棄までの総コストで、初期費用と運用・保守費用の両方を含みます。"
+                },
+                {
+                    id: 28,
+                    question: "データマイニングの目的として適切なものはどれか。",
+                    options: ["データの圧縮", "データの暗号化", "データからパターンの発見", "データの分散処理"],
+                    correct: 2,
+                    explanation: "データマイニングは、大量のデータから有用なパターンや知識を発見することを目的とした技術です。"
+                },
+                {
+                    id: 29,
+                    question: "ITガバナンスの目的として適切なものはどれか。",
+                    options: ["IT投資の削減", "IT戦略と経営戦略の整合", "システム開発の高速化", "IT人材の確保"],
+                    correct: 1,
+                    explanation: "ITガバナンスは、IT戦略を経営戦略と整合させ、ITによる企業価値向上を実現することが主な目的です。"
+                },
+                {
+                    id: 30,
+                    question: "ソフトウェア開発におけるリファクタリングの目的はどれか。",
+                    options: ["新機能の追加", "バグの修正", "コードの品質改善", "処理速度の向上"],
+                    correct: 2,
+                    explanation: "リファクタリングは、外部的な動作を変えずに、コードの内部構造を改善してコードの品質を高める作業です。"
+                }
+            ],
+            2017: [
+                {
+                    id: 31,
+                    question: "情報システムの信頼性を表す指標MTBFが表すものはどれか。",
+                    options: ["平均故障間隔", "平均修復時間", "可用性", "稼働率"],
+                    correct: 0,
+                    explanation: "MTBF（Mean Time Between Failures）は、システムが故障してから次の故障まての平均時間（平均故障間隔）を示す指標です。"
+                },
+                {
+                    id: 32,
+                    question: "企業がクラウドサービスを利用する利点として適切でないものはどれか。",
+                    options: ["初期投資の削減", "運用負荷の軽減", "データの完全な制御", "スケーラビリティの向上"],
+                    correct: 2,
+                    explanation: "クラウドサービスでは、データはクラウド事業者の管理下にあるため、企業による完全な制御は困難です。"
+                },
+                {
+                    id: 33,
+                    question: "情報システムにおけるSLAとは何か。",
+                    options: ["システム要件定義書", "サービス品質保証契約", "ソフトウェアライセンス", "セキュリティ監査"],
+                    correct: 1,
+                    explanation: "SLA（Service Level Agreement）は、サービス提供者と利用者間でサービス品質について合意した契約です。"
+                },
+                {
+                    id: 34,
+                    question: "EDIの主な目的はどれか。",
+                    options: ["企業間のデータ交換", "社内情報共有", "顧客情報管理", "製品開発支援"],
+                    correct: 0,
+                    explanation: "EDI（Electronic Data Interchange）は、企業間で商取引データを電子的に交換するためのシステムです。"
+                },
+                {
+                    id: 35,
+                    question: "ITILにおけるインシデント管理の目的はどれか。",
+                    options: ["システム変更の管理", "サービス停止時間の最小化", "IT投資の最適化", "人材育成の推進"],
+                    correct: 1,
+                    explanation: "ITIL（IT Infrastructure Library）のインシデント管理は、ITサービスの中断を最小限に抑え、迅速な復旧を目指します。"
+                }
+            ],
+            2016: [
+                {
+                    id: 36,
+                    question: "SOAの特徴として適切なものはどれか。",
+                    options: ["モノリシックなアーキテクチャ", "サービス指向のアーキテクチャ", "手続き型プログラミング", "オブジェクト指向設計"],
+                    correct: 1,
+                    explanation: "SOA（Service Oriented Architecture）は、ビジネス機能をサービスとして構築し、それらを組み合わせてシステムを構成するアーキテクチャです。"
+                },
+                {
+                    id: 37,
+                    question: "ビジネスプロセスリエンジニアリング（BPR）の目的はどれか。",
+                    options: ["従業員のスキル向上", "業務プロセスの抜本的改革", "システムの部分的改修", "組織構造の微調整"],
+                    correct: 1,
+                    explanation: "BPR（Business Process Reengineering）は、既存の業務プロセスを根本から見直し、抜本的に再設計することを目的とします。"
+                },
+                {
+                    id: 38,
+                    question: "フォールトトレラントシステムの目的はどれか。",
+                    options: ["処理速度の向上", "故障に対する耐性の向上", "開発コストの削減", "操作性の改善"],
+                    correct: 1,
+                    explanation: "フォールトトレラントシステムは、システムの一部に故障が発生しても、システム全体としては正常に動作し続けることを目的とします。"
+                },
+                {
+                    id: 39,
+                    question: "情報システムの外部設計で決定する内容として適切でないものはどれか。",
+                    options: ["画面設計", "帳票設計", "データベース論理設計", "プログラム内部構造"],
+                    correct: 3,
+                    explanation: "外部設計では、利用者から見えるインタフェース（画面、帳票、データベース論理設計）を決定します。プログラム内部構造は内部設計で決定します。"
+                },
+                {
+                    id: 40,
+                    question: "システム開発におけるプロトタイピングの利点はどれか。",
+                    options: ["開発コストの削減", "要件の明確化", "開発期間の短縮", "品質の向上"],
+                    correct: 1,
+                    explanation: "プロトタイピングは、システムの試作品を早期に作成し、利用者との対話を通じて要件を明確化することが主な利点です。"
+                }
+            ],
+            2015: [
+                {
+                    id: 41,
+                    question: "企業におけるナレッジマネジメントの目的はどれか。",
+                    options: ["情報システムの構築", "知識の共有と活用", "データの蓄積", "文書の管理"],
+                    correct: 1,
+                    explanation: "ナレッジマネジメントは、組織内の知識を体系的に管理し、共有・活用することで組織の競争力向上を図ります。"
+                },
+                {
+                    id: 42,
+                    question: "バランススコアカードの4つの視点に含まれないものはどれか。",
+                    options: ["財務の視点", "顧客の視点", "競合の視点", "学習と成長の視点"],
+                    correct: 2,
+                    explanation: "バランススコアカードの4つの視点は、財務、顧客、内部プロセス、学習と成長です。競合の視点は含まれません。"
+                },
+                {
+                    id: 43,
+                    question: "ITポートフォリオにおけるアプリケーションの分類で、現状維持が適切なものはどれか。",
+                    options: ["戦略アプリケーション", "重要アプリケーション", "基盤アプリケーション", "保守アプリケーション"],
+                    correct: 2,
+                    explanation: "基盤アプリケーションは、企業活動の基盤となるシステムで、安定運用が重要であり、現状維持が適切です。"
+                },
+                {
+                    id: 44,
+                    question: "システムの非機能要件として適切でないものはどれか。",
+                    options: ["性能要件", "セキュリティ要件", "ユーザビリティ要件", "業務要件"],
+                    correct: 3,
+                    explanation: "業務要件は機能要件に含まれます。非機能要件には性能、セキュリティ、ユーザビリティなどが含まれます。"
+                },
+                {
+                    id: 45,
+                    question: "データウェアハウスの特徴として適切なものはどれか。",
+                    options: ["リアルタイム処理", "基幹業務処理", "時系列データの蓄積", "トランザクション処理"],
+                    correct: 2,
+                    explanation: "データウェアハウスは、意思決定支援のために時系列でデータを蓄積し、分析に特化したデータベースです。"
+                }
+            ],
+            2014: [
+                {
+                    id: 46,
+                    question: "グリーンITの取り組みとして適切でないものはどれか。",
+                    options: ["省電力機器の導入", "仮想化技術の活用", "クラウドサービスの利用", "ハードウェアの頻繁な更新"],
+                    correct: 3,
+                    explanation: "グリーンITは環境負荷軽減を目的とするため、ハードウェアの頻繁な更新は資源の無駄遣いとなり、適切ではありません。"
+                },
+                {
+                    id: 47,
+                    question: "システム監査の目的として適切なものはどれか。",
+                    options: ["システム開発の支援", "情報システムの客観的評価", "プログラムのデバッグ", "データベースの設計"],
+                    correct: 1,
+                    explanation: "システム監査は、情報システムの適切性、効率性、信頼性などを第三者の立場から客観的に評価することが目的です。"
+                },
+                {
+                    id: 48,
+                    question: "ソフトウェアのライセンス形態のうち、コピーレフトの特徴を持つものはどれか。",
+                    options: ["プロプライエタリソフトウェア", "フリーウェア", "GPL", "シェアウェア"],
+                    correct: 2,
+                    explanation: "GPL（General Public License）は、派生ソフトウェアも同じライセンスで公開することを要求するコピーレフトの特徴を持ちます。"
+                },
+                {
+                    id: 49,
+                    question: "企業のIT戦略における「攻めのIT」の特徴はどれか。",
+                    options: ["コスト削減", "業務効率化", "新たな価値創造", "リスク管理"],
+                    correct: 2,
+                    explanation: "「攻めのIT」は、ITを活用して新たなビジネス価値を創造し、競争優位性を獲得することを目的とします。"
+                },
+                {
+                    id: 50,
+                    question: "情報システムの統制において、ITガバナンスが重視する要素はどれか。",
+                    options: ["技術的統制のみ", "業務統制のみ", "全般統制のみ", "全般統制と業務統制の両方"],
+                    correct: 3,
+                    explanation: "ITガバナンスでは、組織レベルでの全般統制と、個別業務レベルでの業務統制の両方を適切に統制することが重要です。"
+                }
+            ]
+        };
+
+        let currentSession = {
+            questions: [],
+            currentIndex: 0,
+            correctAnswers: 0,
+            selectedAnswer: -1,
+            mode: 'practice',
+            startTime: null
+        };
+
+        let userStats = {
+            totalQuestions: parseInt(localStorage.getItem('totalQuestions') || '0'),
+            correctAnswers: parseInt(localStorage.getItem('correctAnswers') || '0'),
+            streakDays: parseInt(localStorage.getItem('streakDays') || '0'),
+            totalScore: parseInt(localStorage.getItem('totalScore') || '0'),
+            lastStudyDate: localStorage.getItem('lastStudyDate') || '',
+            purchasedFeatures: JSON.parse(localStorage.getItem('purchasedFeatures') || '[]')
+        };
+
+        function initApp() {
+            updateStreakDays();
+            updateStats();
+            showDailyNotification();
+            hideAdsIfPurchased();
+        }
+
+        function updateStreakDays() {
+            const today = new Date().toDateString();
+            if (userStats.lastStudyDate !== today) {
+                if (isConsecutiveDay(userStats.lastStudyDate, today)) {
+                    userStats.streakDays++;
+                } else if (userStats.lastStudyDate) {
+                    userStats.streakDays = 1;
+                }
+                userStats.lastStudyDate = today;
+                saveStats();
+            }
+        }
+
+        function isConsecutiveDay(lastDate, today) {
+            if (!lastDate) return false;
+            const last = new Date(lastDate);
+            const todayDate = new Date(today);
+            const diffTime = todayDate - last;
+            const diffDays = diffTime / (1000 * 60 * 60 * 24);
+            return diffDays === 1;
+        }
+
+        function showDailyNotification() {
+            const today = new Date().toDateString();
+            const lastDaily = localStorage.getItem('lastDailyQuestion');
+            if (lastDaily !== today) {
+                document.getElementById('daily-notification').classList.add('show');
+            }
+        }
+
+        function startDailyQuestion() {
+            const today = new Date().toDateString();
+            localStorage.setItem('lastDailyQuestion', today);
+            document.getElementById('daily-notification').classList.remove('show');
+            startPractice('random', 1);
+        }
+
+        function hideAdsIfPurchased() {
+            if (userStats.purchasedFeatures.includes('ad-free')) {
+                document.getElementById('ad-banner').style.display = 'none';
+            }
+        }
+
+        function startPractice(mode, questionCount = 10) {
+            showScreen('question');
+            
+            currentSession.mode = mode;
+            currentSession.currentIndex = 0;
+            currentSession.correctAnswers = 0;
+            currentSession.startTime = Date.now();
+            
+            if (mode === 'random') {
+                currentSession.questions = getRandomQuestions(questionCount);
+            } else if (mode === 'year') {
+                showYearSelection();
+                return;
+            }
+            
+            document.getElementById('total-q').textContent = currentSession.questions.length;
+            loadQuestion();
+        }
+
+        function getRandomQuestions(count) {
+            const allQuestions = [];
+            Object.values(questionsDB).forEach(yearQuestions => {
+                allQuestions.push(...yearQuestions);
+            });
+            
+            const shuffled = allQuestions.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function showYearSelection() {
+            const years = Object.keys(questionsDB);
+            const optionsHtml = years.map(year => 
+                `<div class="answer-option" onclick="selectYear('${year}')">${year}年度 (${questionsDB[year].length}問)</div>`
+            ).join('');
+            
+            document.getElementById('question-text').innerHTML = '年度を選択してください';
+            document.getElementById('answer-options').innerHTML = optionsHtml;
+            document.getElementById('submit-btn').style.display = 'none';
+        }
+
+        function selectYear(year) {
+            currentSession.questions = [...questionsDB[year]];
+            document.getElementById('total-q').textContent = currentSession.questions.length;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const question = currentSession.questions[currentSession.currentIndex];
+            
+            document.getElementById('current-q').textContent = currentSession.currentIndex + 1;
+            document.getElementById('question-text').textContent = question.question;
+            
+            const optionsHtml = question.options.map((option, index) => 
+                `<div class="answer-option" onclick="selectAnswer(${index})">${String.fromCharCode(65 + index)}. ${option}</div>`
+            ).join('');
+            
+            document.getElementById('answer-options').innerHTML = optionsHtml;
+            document.getElementById('explanation').classList.remove('show');
+            document.getElementById('submit-btn').style.display = 'block';
+            document.getElementById('next-btn').style.display = 'none';
+            
+            currentSession.selectedAnswer = -1;
+        }
+
+        function selectAnswer(index) {
+            currentSession.selectedAnswer = index;
+            
+            const options = document.querySelectorAll('.answer-option');
+            options.forEach((option, i) => {
+                option.classList.remove('selected');
+                if (i === index) {
+                    option.classList.add('selected');
+                }
+            });
+        }
+
+        function submitAnswer() {
+            if (currentSession.selectedAnswer === -1) {
+                alert('答えを選択してください');
+                return;
+            }
+            
+            const question = currentSession.questions[currentSession.currentIndex];
+            const options = document.querySelectorAll('.answer-option');
+            
+            options.forEach((option, i) => {
+                option.onclick = null;
+                if (i === question.correct) {
+                    option.classList.add('correct');
+                } else if (i === currentSession.selectedAnswer) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            if (currentSession.selectedAnswer === question.correct) {
+                currentSession.correctAnswers++;
+                userStats.totalScore += 10;
+            }
+            
+            userStats.totalQuestions++;
+            userStats.correctAnswers += (currentSession.selectedAnswer === question.correct ? 1 : 0);
+            
+            document.getElementById('explanation-text').textContent = question.explanation;
+            document.getElementById('explanation').classList.add('show');
+            
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'block';
+            
+            saveStats();
+            updateStats();
+        }
+
+        function nextQuestion() {
+            currentSession.currentIndex++;
+            
+            if (currentSession.currentIndex >= currentSession.questions.length) {
+                showResult();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function showResult() {
+            const score = `${currentSession.correctAnswers}/${currentSession.questions.length}`;
+            document.getElementById('final-score').textContent = score;
+            
+            let message = '';
+            const percentage = (currentSession.correctAnswers / currentSession.questions.length) * 100;
+            
+            if (percentage >= 80) {
+                message = '素晴らしい結果です！';
+            } else if (percentage >= 60) {
+                message = 'もう少しで合格レベルです！';
+            } else {
+                message = '継続して学習しましょう！';
+            }
+            
+            document.getElementById('result-message').textContent = message;
+            document.getElementById('result-modal').classList.add('show');
+        }
+
+        function shareScore() {
+            const score = document.getElementById('final-score').textContent;
+            const text = `ITパスポート過去問で ${score} 正解しました！\n#ITパスポート #過去問アプリ`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'ITパスポート過去問の結果',
+                    text: text
+                });
+            } else {
+                const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+                window.open(url, '_blank');
+            }
+        }
+
+        function showStats() {
+            showScreen('stats');
+            updateStats();
+        }
+
+        function updateStats() {
+            document.getElementById('total-questions').textContent = userStats.totalQuestions;
+            document.getElementById('correct-rate').textContent = 
+                userStats.totalQuestions > 0 ? 
+                Math.round((userStats.correctAnswers / userStats.totalQuestions) * 100) + '%' : 
+                '0%';
+            document.getElementById('streak-days').textContent = userStats.streakDays;
+            document.getElementById('total-score').textContent = userStats.totalScore;
+        }
+
+        function saveStats() {
+            localStorage.setItem('totalQuestions', userStats.totalQuestions.toString());
+            localStorage.setItem('correctAnswers', userStats.correctAnswers.toString());
+            localStorage.setItem('streakDays', userStats.streakDays.toString());
+            localStorage.setItem('totalScore', userStats.totalScore.toString());
+            localStorage.setItem('lastStudyDate', userStats.lastStudyDate);
+        }
+
+        function showPurchaseModal(feature) {
+            if (userStats.purchasedFeatures.includes(feature)) {
+                if (feature === 'mock-test') {
+                    startMockTest();
+                }
+                return;
+            }
+            document.getElementById('purchase-modal').classList.add('show');
+        }
+
+        // Stripe初期化
+        const stripe = Stripe('pk_test_YOUR_PUBLISHABLE_KEY_HERE'); // 実際のキーに置き換え
+        
+        function purchase(feature) {
+            const prices = {
+                'ad-free': {
+                    amount: 68000, // 680円（セント単位）
+                    description: '広告オフ機能'
+                },
+                'mock-test': {
+                    amount: 98000, // 980円（セント単位）
+                    description: '模擬試験パック'
+                }
+            };
+            
+            const price = prices[feature];
+            
+            // Stripe Checkoutを使用した決済
+            stripe.redirectToCheckout({
+                lineItems: [{
+                    price_data: {
+                        currency: 'jpy',
+                        product_data: {
+                            name: `ITパスポートアプリ - ${price.description}`
+                        },
+                        unit_amount: price.amount,
+                    },
+                    quantity: 1,
+                }],
+                mode: 'payment',
+                successUrl: window.location.origin + '/success.html?feature=' + feature,
+                cancelUrl: window.location.href,
+                locale: 'ja'
+            }).then(function (result) {
+                if (result.error) {
+                    alert('決済でエラーが発生しました: ' + result.error.message);
+                }
+            });
+        }
+        
+        // 決済成功後の処理
+        function handlePurchaseSuccess(feature) {
+            userStats.purchasedFeatures.push(feature);
+            localStorage.setItem('purchasedFeatures', JSON.stringify(userStats.purchasedFeatures));
+            
+            if (feature === 'ad-free') {
+                document.getElementById('ad-banner').style.display = 'none';
+            }
+            
+            alert('購入が完了しました！ありがとうございます。');
+            
+            if (feature === 'mock-test') {
+                startMockTest();
+            }
+        }
+
+        function startMockTest() {
+            if (!userStats.purchasedFeatures.includes('mock-test')) {
+                showPurchaseModal('mock-test');
+                return;
+            }
+            
+            showScreen('question');
+            currentSession.mode = 'mock';
+            currentSession.questions = getRandomQuestions(50);
+            currentSession.currentIndex = 0;
+            currentSession.correctAnswers = 0;
+            
+            document.getElementById('total-q').textContent = '50';
+            loadQuestion();
+        }
+
+        function showScreen(screen) {
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('question-area').classList.remove('active');
+            document.getElementById('stats-section').classList.remove('active');
+            
+            if (screen === 'menu') {
+                document.getElementById('main-menu').style.display = 'block';
+                document.getElementById('header-title').textContent = 'ITパスポート過去問';
+                document.getElementById('back-btn').style.display = 'none';
+            } else if (screen === 'question') {
+                document.getElementById('question-area').classList.add('active');
+                document.getElementById('header-title').textContent = '過去問練習';
+                document.getElementById('back-btn').style.display = 'block';
+            } else if (screen === 'stats') {
+                document.getElementById('stats-section').classList.add('active');
+                document.getElementById('header-title').textContent = '学習進捗';
+                document.getElementById('back-btn').style.display = 'block';
+            }
+        }
+
+        function goBack() {
+            showScreen('menu');
+        }
+
+        function closeModal() {
+            document.getElementById('result-modal').classList.remove('show');
+            showScreen('menu');
+        }
+
+        function closePurchaseModal() {
+            document.getElementById('purchase-modal').classList.remove('show');
+        }
+
+        // Service Worker登録
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        // アプリ初期化
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>

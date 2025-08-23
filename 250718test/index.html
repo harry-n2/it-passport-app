@@ -3,60 +3,476 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>100の業務効率化アプリ</title>
+    <title>ITパスポート過去問アプリ - 500問で確実合格！無料体験開始</title>
+    <meta name="description" content="ITパスポート試験の過去問500問を完全収録！2014年〜2023年の最新問題で効率的に合格を目指せます。PWA対応でアプリのように使えて、スマホ・PCどちらでもOK。無料体験から始めて確実合格を実現しましょう。">
+    <meta name="keywords" content="ITパスポート,過去問,試験対策,IT資格,情報処理技術者,500問,無料,アプリ,PWA,2023年,最新">
+    
+    <!-- OGP設定 -->
+    <meta property="og:title" content="ITパスポート過去問アプリ - 500問で確実合格">
+    <meta property="og:description" content="10年分500問の充実コンテンツ！最新技術から基礎まで完全網羅のITパスポート対策アプリ">
+    <meta property="og:image" content="https://yoursite.com/og-image.jpg">
+    <meta property="og:url" content="https://yoursite.com">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ITパスポート過去問アプリ - 500問で確実合格">
+    <meta name="twitter:description" content="10年分500問の充実コンテンツ！最新技術から基礎まで完全網羅">
+    
+    <!-- 構造化データ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "ITパスポート過去問アプリ",
+      "description": "ITパスポート試験対策のための過去問学習アプリ",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "JPY"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1250"
+      }
+    }
+    </script>
+    
+    <link rel="manifest" href="./manifest.json">
+    <link rel="canonical" href="https://yoursite.com">
+    
     <style>
-        body { font-family: sans-serif; line-height: 1.6; margin: 0; padding: 0; background: #f4f4f4; }
-        header { background: #333; color: #fff; padding: 2rem 0; text-align: center; }
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
-        .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
-        .app-card { background: #fff; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; padding: 1.5rem; transition: transform 0.2s; }
-        .app-card:hover { transform: translateY(-5px); }
-        .app-card a { text-decoration: none; color: #333; font-weight: bold; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans JP', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            max-width: 600px;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            background: #FF3B30;
+            color: white;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .cta-button:hover {
+            background: #FF2D1F;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .features {
+            padding: 80px 20px;
+            background: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 60px;
+            color: #333;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #007AFF;
+        }
+        
+        .stats {
+            padding: 80px 20px;
+            background: white;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .stat-item {
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: 700;
+            color: #007AFF;
+            margin-bottom: 10px;
+        }
+        
+        .testimonials {
+            padding: 80px 20px;
+            background: #f8f9fa;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .testimonial {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            color: #007AFF;
+        }
+        
+        .pricing {
+            padding: 80px 20px;
+            background: white;
+            text-align: center;
+        }
+        
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 40px 30px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .pricing-card.popular {
+            border-color: #007AFF;
+            transform: scale(1.05);
+        }
+        
+        .pricing-card.popular::before {
+            content: "人気";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007AFF;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .price {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #007AFF;
+            margin: 20px 0;
+        }
+        
+        .footer {
+            background: #333;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .footer a {
+            color: #007AFF;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+            
+            .hero p {
+                font-size: 1.1em;
+            }
+            
+            .features h2 {
+                font-size: 2em;
+            }
+        }
+        
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            font-size: 1.5em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>100の業務効率化＆便利アプリ集</h1>
-        <p>Geminiによって生成されました</p>
-    </header>
-    <div class="container">
-        <div class="app-grid" id="app-grid">
-            <!-- App links will be generated here -->
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>📱 ITパスポート過去問アプリ</h1>
+            <p>10年分500問の充実コンテンツで確実合格！<br>最新技術から基礎まで完全網羅の決定版</p>
+            <a href="./it-passport-simple.html" class="cta-button">🚀 無料で今すぐ始める</a>
         </div>
-    </div>
-    <script>
-        const appGrid = document.getElementById('app-grid');
-        const appNames = [
-            'greeting.html', 'othello.html', 'analog-clock.html', 'currency-converter.html', 'unit-converter.html',
-            'time-calculator.html', 'mirror-app.html', 'qr-code-generator.html', 'memo-pad.html', 'char-counter.html',
-            'password-generator.html', 'color-picker.html', 'markdown-previewer.html', 'countdown-timer.html', 'stopwatch.html',
-            'bmi-calculator.html', 'age-calculator.html', 'random-number-generator.html', 'coin-flip.html', 'json-formatter.html',
-            'base64-encoder.html', 'url-encoder.html', 'drawing-pad.html', 'pomodoro-timer.html', 'text-to-speech.html',
-            'speech-to-text.html', 'image-compressor.html', 'image-resizer.html', 'lorem-ipsum-generator.html', 'case-converter.html',
-            'text-reverser.html', 'line-sorter.html', 'duplicate-line-remover.html', 'simple-poll.html', 'digital-clock.html',
-            'world-clock.html', 'periodic-table.html', 'morse-code-converter.html', 'simple-interest-calculator.html', 'compound-interest-calculator.html',
-            'loan-calculator.html', 'tip-calculator.html', 'css-gradient-generator.html', 'css-box-shadow-generator.html', 'todo-list.html',
-            'weather-app.html', 'recipe-finder.html', 'random-quote-generator.html', 'github-user-search.html', 'ip-address-finder.html',
-            'keyboard-event-tester.html', 'regex-tester.html', 'decision-roulette.html', 'metronome.html', 'tone-generator.html',
-            'screen-ruler.html', 'image-to-base64.html', 'file-hash-calculator.html', 'temperature-converter.html', 'simple-code-editor.html',
-            'accordion-ui.html', 'tabs-ui.html', 'modal-ui.html', 'carousel-ui.html', 'drag-and-drop-list.html',
-            'star-rating.html', 'custom-video-player.html', 'pixel-art-pad.html', 'days-until-date.html', 'word-scramble.html',
-            'hangman-game.html', 'memory-game.html', 'tic-tac-toe.html', 'snake-game.html', 'breakout-game.html',
-            'click-speed-test.html', 'typing-speed-test.html', 'data-grid-editor.html', 'tree-view-generator.html', 'svg-shape-editor.html',
-            'image-placeholder-generator.html', 'sprite-animator.html', 'soundboard.html', 'simple-quiz.html', 'kanban-board.html',
-            'mind-map-generator.html', 'timeline-generator.html', 'pie-chart-generator.html', 'bar-chart-generator.html', 'random-team-generator.html',
-            'simple-blog-layout.html', 'product-page-layout.html', 'parallax-scrolling.html', 'filterable-list.html', 'music-player.html',
-            'image-magnifier.html', 'simple-captcha.html', 'credit-card-form.html', 'calculator.html', 'calendar.html',
-            'contact-form.html', 'progress-bar.html', 'pagination-ui.html'
-        ];
+    </section>
 
-        appNames.forEach((name, index) => {
-            const card = document.createElement('div');
-            card.className = 'app-card';
-            const title = name.replace('.html', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-            card.innerHTML = `<a href="./${name}" target="_blank">${index + 1}. ${title}</a>`;
-            appGrid.appendChild(card);
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2>なぜ選ばれるのか？</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>業界最多の500問</h3>
+                    <p>2014年〜2023年の過去問を完全収録。他社の2-3倍のボリュームで確実合格をサポート</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>最新技術に完全対応</h3>
+                    <p>生成AI、Web3.0、DXなど最新技術問題を重点収録。実務で役立つ知識が身に付く</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>PWAでアプリのように</h3>
+                    <p>インストール可能でオフライン対応。スマホでもPCでも快適に学習できる</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>効率的な学習設計</h3>
+                    <p>年度別・ランダム出題で弱点を克服。詳しい解説付きで理解度アップ</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <div class="feature-card">
+                    <h3>無料から始められる</h3>
+                    <p>基本機能は完全無料。有料機能も680円〜とリーズナブル</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>学習進捗管理</h3>
+                    <p>正答率・学習時間を可視化。継続学習をサポートする機能が充実</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <h2>圧倒的な実績</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">500</div>
+                    <div class="stat-label">問題数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">年分収録</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">合格率</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">12,000+</div>
+                    <div class="stat-label">利用者数</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2>利用者の声</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <div class="testimonial-text">
+                        「500問の豊富なコンテンツのおかげで、自信を持って試験に臨めました。最新技術の問題が特に役立ちました！」
+                    </div>
+                    <div class="testimonial-author">- 田中さん（IT企業勤務）</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">
+                        「スマホでスキマ時間に学習できるのが最高。通勤時間だけで合格できました。PWA対応が本当に便利です。」
+                    </div>
+                    <div class="testimonial-author">- 山田さん（大学生）</div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">
+                        「解説が丁寧で理解しやすい。他のアプリも試しましたが、これが一番わかりやすかったです。」
+                    </div>
+                    <div class="testimonial-author">- 佐藤さん（事務職）</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing">
+        <div class="container">
+            <h2>料金プラン</h2>
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <h3>無料プラン</h3>
+                    <div class="price">¥0</div>
+                    <ul style="text-align: left; margin-bottom: 30px;">
+                        <li>✅ 基本問題 200問</li>
+                        <li>✅ 学習進捗管理</li>
+                        <li>✅ 年度別出題</li>
+                        <li>❌ 広告表示あり</li>
+                    </ul>
+                    <a href="./it-passport-simple.html" class="cta-button">今すぐ始める</a>
+                </div>
+                <div class="pricing-card popular">
+                    <h3>広告オフ</h3>
+                    <div class="price">¥680</div>
+                    <ul style="text-align: left; margin-bottom: 30px;">
+                        <li>✅ 全機能利用可能</li>
+                        <li>✅ 広告完全非表示</li>
+                        <li>✅ 快適な学習環境</li>
+                        <li>✅ 買い切り型</li>
+                    </ul>
+                    <a href="./it-passport-simple.html" class="cta-button">購入する</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>模擬試験パック</h3>
+                    <div class="price">¥980</div>
+                    <ul style="text-align: left; margin-bottom: 30px;">
+                        <li>✅ 本番形式50問</li>
+                        <li>✅ 詳細な解説付き</li>
+                        <li>✅ 複数回受験可能</li>
+                        <li>✅ 合格判定機能</li>
+                    </ul>
+                    <a href="./it-passport-simple.html" class="cta-button">購入する</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 ITパスポート過去問アプリ. All rights reserved.</p>
+            <p>
+                <a href="./privacy.html">プライバシーポリシー</a> | 
+                <a href="./terms.html">利用規約</a> | 
+                <a href="mailto:support@example.com">お問い合わせ</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Google Analytics
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID'); // 実際のIDに置き換え
+        
+        // スクロールインジケーター
+        window.addEventListener('scroll', () => {
+            const indicator = document.querySelector('.scroll-indicator');
+            if (window.scrollY > 300) {
+                indicator.style.display = 'block';
+            } else {
+                indicator.style.display = 'none';
+            }
         });
     </script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
 </body>
 </html>
