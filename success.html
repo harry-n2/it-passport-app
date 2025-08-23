@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>購入完了 - ITパスポート過去問アプリ</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            color: white;
+        }
+        .success-container {
+            text-align: center;
+            background: white;
+            color: #333;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+        .checkmark {
+            font-size: 4em;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #007AFF;
+        }
+        .btn {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+        }
+        .btn:hover {
+            background: #0056CC;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="checkmark">✅</div>
+        <h1>購入完了！</h1>
+        <p>ご購入ありがとうございます。</p>
+        <p>機能が有効化されました。</p>
+        
+        <a href="./it-passport-simple.html" class="btn">アプリに戻る</a>
+    </div>
+    
+    <script>
+        // URLパラメータから機能を取得して有効化
+        const urlParams = new URLSearchParams(window.location.search);
+        const feature = urlParams.get('feature');
+        
+        if (feature) {
+            // ローカルストレージに購入機能を保存
+            const purchasedFeatures = JSON.parse(localStorage.getItem('purchasedFeatures') || '[]');
+            if (!purchasedFeatures.includes(feature)) {
+                purchasedFeatures.push(feature);
+                localStorage.setItem('purchasedFeatures', JSON.stringify(purchasedFeatures));
+            }
+        }
+    </script>
+</body>
+</html>
