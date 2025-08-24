@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ITパスポート過去問アプリ</string>
+    <string name="title_activity_main">ITパスポート過去問アプリ</string>
+    <string name="package_name">com.itpassport.app</string>
+    <string name="custom_url_scheme">com.itpassport.app</string>
+</resources>
