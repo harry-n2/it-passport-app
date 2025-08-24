@@ -22,10 +22,54 @@
             margin-bottom: 20px;
             display: inline-block;
         }
+        
+        .nav-menu {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .nav-link {
+            color: #007AFF;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-link:hover {
+            background-color: #e6f2ff;
+        }
+        
+        .nav-link.current {
+            background-color: #007AFF;
+            color: white;
+        }
     </style>
 </head>
 <body>
     <a href="./index.html" class="back-link">← トップページに戻る</a>
+    
+    <nav class="nav-menu">
+        <div class="nav-links">
+            <a href="./it-passport-simple.html" class="nav-link">🎯 学習</a>
+            <a href="./it-passport-app.html" class="nav-link">📱 アプリ情報</a>
+            <a href="./privacy.html" class="nav-link">🔒 プライバシー</a>
+            <a href="./terms.html" class="nav-link current">📋 利用規約</a>
+        </div>
+    </nav>
     
     <h1>利用規約</h1>
     

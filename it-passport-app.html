@@ -40,6 +40,43 @@
             opacity: 0.9;
         }
         
+        .nav-menu {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 12px;
+            margin: 20px 0;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.current {
+            background: white;
+            color: #667eea;
+        }
+        
         .main-content {
             background: white;
             border-radius: 20px;
@@ -339,6 +376,15 @@
             <h1>📱 ITパスポート学習アプリ</h1>
             <p>効率的な学習で確実に合格を目指そう！</p>
         </header>
+        
+        <nav class="nav-menu">
+            <div class="nav-links">
+                <a href="./it-passport-simple.html" class="nav-link">🎯 学習</a>
+                <a href="./it-passport-app.html" class="nav-link current">📱 アプリ情報</a>
+                <a href="./privacy.html" class="nav-link">🔒 プライバシー</a>
+                <a href="./terms.html" class="nav-link">📋 利用規約</a>
+            </div>
+        </nav>
         
         <div class="main-content">
             <div id="main-menu" class="menu-section">

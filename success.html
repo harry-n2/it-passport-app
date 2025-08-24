@@ -50,6 +50,36 @@
         .btn:hover {
             background: #0056CC;
         }
+        
+        .nav-menu {
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .nav-link {
+            color: #007AFF;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-link:hover {
+            background-color: #e6f2ff;
+        }
     </style>
 </head>
 <body>
@@ -58,6 +88,15 @@
         <h1>購入完了！</h1>
         <p>ご購入ありがとうございます。</p>
         <p>機能が有効化されました。</p>
+        
+        <nav class="nav-menu">
+            <div class="nav-links">
+                <a href="./it-passport-simple.html" class="nav-link">🎯 学習</a>
+                <a href="./it-passport-app.html" class="nav-link">📱 アプリ情報</a>
+                <a href="./privacy.html" class="nav-link">🔒 プライバシー</a>
+                <a href="./terms.html" class="nav-link">📋 利用規約</a>
+            </div>
+        </nav>
         
         <a href="./it-passport-simple.html" class="btn">アプリに戻る</a>
     </div>

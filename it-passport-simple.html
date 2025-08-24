@@ -49,6 +49,45 @@
             font-weight: 600;
         }
         
+        .nav-menu {
+            background: #f8f8f8;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 0;
+            text-align: center;
+            position: sticky;
+            top: 70px;
+            z-index: 99;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            max-width: 414px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+        
+        .nav-link {
+            color: #007AFF;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-link:hover {
+            background-color: #e6f2ff;
+        }
+        
+        .nav-link.current {
+            background-color: #007AFF;
+            color: white;
+        }
+        
         .ad-banner {
             height: 50px;
             background: #f0f0f0;
@@ -401,6 +440,15 @@
             <button class="back-button" id="back-btn" onclick="goBack()" style="display: none;">← 戻る</button>
             <h1 id="header-title">ITパスポート過去問</h1>
         </div>
+        
+        <nav class="nav-menu">
+            <div class="nav-links">
+                <a href="./it-passport-simple.html" class="nav-link current">🎯 学習</a>
+                <a href="./it-passport-app.html" class="nav-link">📱 アプリ情報</a>
+                <a href="./privacy.html" class="nav-link">🔒 プライバシー</a>
+                <a href="./terms.html" class="nav-link">📋 利用規約</a>
+            </div>
+        </nav>
         
         <div class="ad-banner" id="ad-banner">
             <span>広告を非表示にする → </span>
