@@ -70,6 +70,57 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
     }
 
     @PluginMethod
+    public void queryProductDetails(PluginCall call) {
+        List<QueryProductDetailsParams.Product> productList = new ArrayList<>();
+        
+        // アプリの商品ID（Play Consoleで設定したものと一致させる）
+        productList.add(
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId("ad_free")
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+        );
+        productList.add(
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId("mock_test")
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+        );
+
+        QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder()
+            .setProductList(productList)
+            .build();
+
+        billingClient.queryProductDetailsAsync(params, (billingResult, productDetailsList) -> {
+            if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
+                call.reject("Failed to query product details: " + billingResult.getDebugMessage());
+                return;
+            }
+
+            JSObject result = new JSObject();
+            JSObject products = new JSObject();
+            
+            for (ProductDetails details : productDetailsList) {
+                JSObject productInfo = new JSObject();
+                productInfo.put("title", details.getTitle());
+                productInfo.put("description", details.getDescription());
+                
+                ProductDetails.OneTimePurchaseOfferDetails offerDetails = details.getOneTimePurchaseOfferDetails();
+                if (offerDetails != null) {
+                    productInfo.put("price", offerDetails.getFormattedPrice());
+                    productInfo.put("priceAmountMicros", offerDetails.getPriceAmountMicros());
+                    productInfo.put("priceCurrencyCode", offerDetails.getPriceCurrencyCode());
+                }
+                
+                products.put(details.getProductId(), productInfo);
+            }
+            
+            result.put("products", products);
+            call.resolve(result);
+        });
+    }
+
+    @PluginMethod
     public void purchase(PluginCall call) {
         String productId = call.getString("productId");
         if (productId == null) {

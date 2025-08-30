@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITパスポート - 有料機能</title>
+    <style>
+        .billing-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .product-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        .price {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 18px;
+        }
+        .purchase-btn {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .purchase-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+        .purchased {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .advertisement {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .mock-test-content {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <h1>ITパスポート学習アプリ</h1>
+        
+        <!-- 広告例（ad_free購入後に非表示） -->
+        <div class="advertisement">
+            📱 スマホゲームの広告 - タップして無料プレイ！
+        </div>
+        
+        <!-- 有料機能セクション -->
+        <div class="billing-section">
+            <h2>🚀 プレミアム機能</h2>
+            
+            <!-- 広告オフ商品 -->
+            <div class="product-card">
+                <div>
+                    <h3>広告オフ</h3>
+                    <p>すべての広告を非表示にして快適に学習</p>
+                    <div class="price" id="ad-free-price">読み込み中...</div>
+                </div>
+                <button class="purchase-btn" id="purchase-ad-free-btn" onclick="purchaseAdFree()">
+                    購入する
+                </button>
+            </div>
+            
+            <!-- 模擬試験パック商品 -->
+            <div class="product-card">
+                <div>
+                    <h3>模擬試験パック</h3>
+                    <p>本番形式の模擬試験で実力チェック</p>
+                    <div class="price" id="mock-test-price">読み込み中...</div>
+                </div>
+                <button class="purchase-btn" id="purchase-mock-test-btn" onclick="purchaseMockTest()">
+                    購入する
+                </button>
+            </div>
+        </div>
+        
+        <!-- 模擬試験コンテンツ（mock_test購入後に表示） -->
+        <div class="mock-test-content">
+            <div class="billing-section">
+                <h2>🎯 模擬試験</h2>
+                <p>本番さながらの模擬試験で実力をチェック！</p>
+                <button class="purchase-btn">模擬試験を開始</button>
+            </div>
+        </div>
+        
+        <!-- 通常の学習コンテンツ -->
+        <div class="billing-section">
+            <h2>📚 学習メニュー</h2>
+            <ul>
+                <li>基礎問題 (無料)</li>
+                <li>分野別問題 (無料)</li>
+                <li>復習問題 (無料)</li>
+            </ul>
+        </div>
+        
+        <!-- 広告例（ad_free購入後に非表示） -->
+        <div class="advertisement">
+            💰 お得なクレジットカード！今なら年会費無料
+        </div>
+    </div>
+    
+    <!-- Capacitor & Billing統合スクリプト -->
+    <script src="https://unpkg.com/@capacitor/core@latest/dist/capacitor.js"></script>
+    <script src="billing-integration.js"></script>
+    
+    <script>
+        // 追加の初期化処理
+        document.addEventListener('DOMContentLoaded', () => {
+            // アプリ起動時の処理
+            console.log('ITパスポートアプリ起動');
+            
+            // デバッグ用：商品情報表示
+            setTimeout(async () => {
+                if (window.itPassportBilling) {
+                    const products = await itPassportBilling.loadProductDetails();
+                    console.log('Available products:', products);
+                    
+                    const purchases = await itPassportBilling.checkPurchases();
+                    console.log('Owned products:', purchases);
+                }
+            }, 1000);
+        });
+        
+        // エラーハンドリング
+        window.addEventListener('error', (e) => {
+            console.error('App error:', e.error);
+        });
+    </script>
+</body>
+</html>
