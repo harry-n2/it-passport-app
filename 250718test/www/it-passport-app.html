@@ -705,42 +705,81 @@
         let studyInterval;
 
         function showPractice() {
+            // メインメニューを非表示
             document.getElementById('main-menu').style.display = 'none';
-            document.getElementById('question-area').classList.add('active');
-            document.getElementById('study-stats').classList.remove('active');
             
+            // 他のセクションを非表示
+            document.getElementById('study-stats').classList.remove('active');
+            document.getElementById('settings-area').classList.remove('active');
+            
+            // 問題エリアを表示
+            document.getElementById('question-area').classList.add('active');
+            
+            // 問題状態を初期化
             currentQuestionIndex = 0;
             correctAnswers = 0;
             totalQuestions = questionsDB.length;
+            selectedAnswer = -1;
             
+            // 問題をロードして学習タイマー開始
             loadQuestion();
             startStudyTimer();
         }
 
         function showMockTest() {
+            // 元の問題データベースを復元
+            if (window.originalQuestionsDB) {
+                questionsDB.length = 0;
+                questionsDB.push(...window.originalQuestionsDB);
+            }
+            
+            // 練習モードを開始
             showPractice();
+            
+            // 120分のタイマーを開始
             startTimer(120 * 60);
         }
 
         function showStats() {
+            // メインメニューを非表示
             document.getElementById('main-menu').style.display = 'none';
+            
+            // 他のセクションを非表示
             document.getElementById('question-area').classList.remove('active');
-            document.getElementById('study-stats').classList.add('active');
             document.getElementById('settings-area').classList.remove('active');
+            
+            // 統計セクションを表示
+            document.getElementById('study-stats').classList.add('active');
+            
+            // 統計を更新
             updateStats();
         }
         
         function showSettings() {
+            // メインメニューを非表示
             document.getElementById('main-menu').style.display = 'none';
+            
+            // 他のセクションを非表示
             document.getElementById('question-area').classList.remove('active');
             document.getElementById('study-stats').classList.remove('active');
+            
+            // 設定セクションを表示
             document.getElementById('settings-area').classList.add('active');
         }
         
         function showCategoryQuestions(category) {
             const categoryQs = categoryQuestions[category];
             if (categoryQs && categoryQs.length > 0) {
-                questionsDB.splice(0, questionsDB.length, ...categoryQs);
+                // 元の問題データベースのバックアップを作成
+                if (!window.originalQuestionsDB) {
+                    window.originalQuestionsDB = [...questionsDB];
+                }
+                
+                // カテゴリの問題で置き換え
+                questionsDB.length = 0;
+                questionsDB.push(...categoryQs);
+                
+                // 練習モードを開始
                 showPractice();
             } else {
                 alert(`${category}の問題がまだ用意されていません。`);
@@ -748,16 +787,37 @@
         }
 
         function showDailyQuestion() {
+            // 元の問題データベースを復元
+            if (window.originalQuestionsDB) {
+                questionsDB.length = 0;
+                questionsDB.push(...window.originalQuestionsDB);
+            }
+            
+            // 1問だけに制限
+            const singleQuestion = [questionsDB[Math.floor(Math.random() * questionsDB.length)]];
+            questionsDB.length = 0;
+            questionsDB.push(...singleQuestion);
+            
+            // 練習モードを開始
             showPractice();
         }
 
         function loadQuestion() {
+            if (!questionsDB || questionsDB.length === 0 || currentQuestionIndex >= questionsDB.length) {
+                console.error('Question data not available');
+                return;
+            }
+            
             const question = questionsDB[currentQuestionIndex];
             
+            // 問題番号を更新
             document.getElementById('current-question').textContent = currentQuestionIndex + 1;
             document.getElementById('total-questions').textContent = totalQuestions;
+            
+            // 問題文を表示
             document.getElementById('question-text').textContent = question.question;
             
+            // 選択肢を生成
             const optionsContainer = document.getElementById('answer-options');
             optionsContainer.innerHTML = '';
             
@@ -769,6 +829,7 @@
                 optionsContainer.appendChild(optionElement);
             });
             
+            // 状態をリセット
             selectedAnswer = -1;
             document.getElementById('explanation').classList.remove('show');
             document.getElementById('submit-btn').style.display = 'inline-block';
@@ -853,20 +914,40 @@
         }
 
         function closeModal() {
+            // モーダルを閉じる
             document.getElementById('result-modal').classList.remove('show');
+            
+            // 元の問題データベースを復元
+            if (window.originalQuestionsDB) {
+                questionsDB.length = 0;
+                questionsDB.push(...window.originalQuestionsDB);
+            }
+            
+            // メインメニューに戻る
             backToMenu();
         }
 
         function backToMenu() {
-            document.getElementById('main-menu').style.display = 'block';
+            // 全てのセクションを非表示
             document.getElementById('question-area').classList.remove('active');
             document.getElementById('study-stats').classList.remove('active');
             document.getElementById('settings-area').classList.remove('active');
             
+            // メインメニューを表示
+            document.getElementById('main-menu').style.display = 'block';
+            
+            // タイマーをクリア
             if (timerInterval) {
                 clearInterval(timerInterval);
+                timerInterval = null;
             }
+            
+            // 学習タイマーを停止
             stopStudyTimer();
+            
+            // 問題状態をリセット
+            selectedAnswer = -1;
+            currentQuestionIndex = 0;
         }
 
         function startTimer(seconds) {

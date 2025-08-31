@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITパスポート学習アプリ（β版）- テスト</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .menu-item {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 16px;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .menu-item h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        
+        .menu-item.practice {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .menu-item.mock-test {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .menu-item.study-stats {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        
+        .section {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .question-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .answer-options {
+            margin-bottom: 20px;
+        }
+        
+        .answer-option {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .answer-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .answer-option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+        
+        .answer-option.correct {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+        }
+        
+        .answer-option.incorrect {
+            border-color: #dc3545;
+            background: #dc3545;
+            color: white;
+        }
+        
+        .explanation {
+            background: #e8f5e8;
+            border: 1px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .explanation.show {
+            display: block;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📱 ITパスポート学習アプリ（β版）</h1>
+            <p>音声・振動対応の新機能をテスト中！</p>
+        </header>
+        
+        <div class="main-content">
+            <div id="main-menu">
+                <div class="menu-grid">
+                    <button class="menu-item practice" onclick="showSection('practice')">
+                        <h3>📚 過去問練習</h3>
+                        <p>全問題をランダムで解く</p>
+                    </button>
+                    
+                    <button class="menu-item" onclick="showSection('strategy')">
+                        <h3>💼 ストラテジ系</h3>
+                        <p>経営戦略・企業法務等</p>
+                    </button>
+                    
+                    <button class="menu-item" onclick="showSection('management')">
+                        <h3>📋 マネジメント系</h3>
+                        <p>プロジェクト・システム管理</p>
+                    </button>
+                    
+                    <button class="menu-item" onclick="showSection('technology')">
+                        <h3>💻 テクノロジ系</h3>
+                        <p>IT技術・セキュリティ等</p>
+                    </button>
+                    
+                    <button class="menu-item mock-test" onclick="showSection('mock')">
+                        <h3>⏰ 模擬試験</h3>
+                        <p>本番と同じ120分で挑戦</p>
+                    </button>
+                    
+                    <button class="menu-item study-stats" onclick="showSection('stats')">
+                        <h3>📊 学習状況</h3>
+                        <p>進捗とグラフを確認</p>
+                    </button>
+                    
+                    <button class="menu-item" onclick="showSection('daily')">
+                        <h3>🎯 今日の1問</h3>
+                        <p>毎日コツコツ習慣化</p>
+                    </button>
+                    
+                    <button class="menu-item" onclick="showSection('settings')">
+                        <h3>⚙️ 設定</h3>
+                        <p>音声・振動・表示設定</p>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="practice-section" class="section">
+                <h2>📚 過去問練習</h2>
+                <div class="question-text">
+                    企業の競争力を向上させるために、ITを活用して業務プロセスを抜本的に見直し、再構築することを何というか。
+                </div>
+                <div class="answer-options">
+                    <div class="answer-option" onclick="selectAnswer(0, false)">A. アウトソーシング</div>
+                    <div class="answer-option" onclick="selectAnswer(1, true)">B. リエンジニアリング</div>
+                    <div class="answer-option" onclick="selectAnswer(2, false)">C. ダウンサイジング</div>
+                    <div class="answer-option" onclick="selectAnswer(3, false)">D. ベンチマーキング</div>
+                </div>
+                <div class="explanation" id="explanation">
+                    <h4>💡 解説</h4>
+                    <p>リエンジニアリングは、既存の業務プロセスを根本から見直し、ITを活用して抜本的に再構築することで、コスト削減や品質向上、顧客サービス改善などを図る手法です。</p>
+                </div>
+                <div>
+                    <button class="btn" onclick="backToMenu()">メニューに戻る</button>
+                </div>
+            </div>
+            
+            <div id="settings-section" class="section">
+                <h2>⚙️ 設定</h2>
+                <div class="setting-item">
+                    <div>
+                        <strong>正解音</strong>
+                        <p>正解時の効果音を再生</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="correct-sound-toggle" checked onchange="playTestSound('correct')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <strong>不正解音</strong>
+                        <p>不正解時の効果音を再生</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="incorrect-sound-toggle" checked onchange="playTestSound('incorrect')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <strong>振動</strong>
+                        <p>正解・不正解時の振動フィードバック</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="vibration-toggle" checked onchange="testVibration()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div>
+                    <button class="btn" onclick="backToMenu()">メニューに戻る</button>
+                </div>
+            </div>
+            
+            <div id="other-sections" class="section">
+                <h2 id="section-title">セクション</h2>
+                <p id="section-content">このセクションは実装中です。</p>
+                <div>
+                    <button class="btn" onclick="backToMenu()">メニューに戻る</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let settings = {
+            correctSound: true,
+            incorrectSound: true,
+            vibration: true
+        };
+        
+        function showSection(sectionName) {
+            // メインメニューを非表示
+            document.getElementById('main-menu').style.display = 'none';
+            
+            // 全てのセクションを非表示
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // 指定されたセクションを表示
+            if (sectionName === 'practice') {
+                document.getElementById('practice-section').classList.add('active');
+            } else if (sectionName === 'settings') {
+                document.getElementById('settings-section').classList.add('active');
+            } else {
+                // その他のセクション
+                document.getElementById('section-title').textContent = getSectionTitle(sectionName);
+                document.getElementById('section-content').textContent = getSectionContent(sectionName);
+                document.getElementById('other-sections').classList.add('active');
+            }
+        }
+        
+        function getSectionTitle(sectionName) {
+            const titles = {
+                'strategy': '💼 ストラテジ系',
+                'management': '📋 マネジメント系',
+                'technology': '💻 テクノロジ系',
+                'mock': '⏰ 模擬試験',
+                'stats': '📊 学習状況',
+                'daily': '🎯 今日の1問'
+            };
+            return titles[sectionName] || 'セクション';
+        }
+        
+        function getSectionContent(sectionName) {
+            const contents = {
+                'strategy': 'ストラテジ系の問題を学習できます。経営戦略や企業法務等の問題が含まれます。',
+                'management': 'マネジメント系の問題を学習できます。プロジェクト管理やシステム管理等の問題が含まれます。',
+                'technology': 'テクノロジ系の問題を学習できます。IT技術やセキュリティ等の問題が含まれます。',
+                'mock': '本番と同様の120分間で模擬試験を実施します。',
+                'stats': '学習の進捗状況や成績を確認できます。',
+                'daily': '毎日1問ずつ問題に挑戦できます。'
+            };
+            return contents[sectionName] || 'このセクションは実装中です。';
+        }
+        
+        function backToMenu() {
+            // 全てのセクションを非表示
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // メインメニューを表示
+            document.getElementById('main-menu').style.display = 'block';
+            
+            // 説明を非表示
+            document.getElementById('explanation').classList.remove('show');
+        }
+        
+        function selectAnswer(index, isCorrect) {
+            const options = document.querySelectorAll('.answer-option');
+            
+            // 全ての選択肢をクリア
+            options.forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+                option.onclick = null;
+            });
+            
+            // 選択した選択肢をマーク
+            options[index].classList.add('selected');
+            
+            // 正解・不正解を表示
+            setTimeout(() => {
+                if (isCorrect) {
+                    options[index].classList.add('correct');
+                    // 正解の効果音と振動
+                    playSound('correct');
+                    vibrate([100, 50, 100]);
+                } else {
+                    options[index].classList.add('incorrect');
+                    // 正解の選択肢を表示
+                    options[1].classList.add('correct');
+                    // 不正解の効果音と振動
+                    playSound('incorrect');
+                    vibrate([200]);
+                }
+                
+                // 解説を表示
+                document.getElementById('explanation').classList.add('show');
+            }, 500);
+        }
+        
+        function playSound(type) {
+            if (type === 'correct' && settings.correctSound) {
+                // 正解音を再生
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhCjiS2fPNdCcFm9u8');
+                audio.volume = 0.3;
+                audio.play().catch(() => {});
+            } else if (type === 'incorrect' && settings.incorrectSound) {
+                // 不正解音を再生
+                const audio = new Audio('data:audio/wav;base64,UklGRjIEAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ4EAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhCjiS2fPNdCcFm9u8');
+                audio.volume = 0.3;
+                audio.play().catch(() => {});
+            }
+        }
+        
+        function vibrate(pattern) {
+            if (settings.vibration && navigator.vibrate) {
+                navigator.vibrate(pattern);
+            }
+        }
+        
+        function playTestSound(type) {
+            settings[type === 'correct' ? 'correctSound' : 'incorrectSound'] = document.getElementById(type + '-sound-toggle').checked;
+            playSound(type);
+        }
+        
+        function testVibration() {
+            settings.vibration = document.getElementById('vibration-toggle').checked;
+            if (settings.vibration) {
+                vibrate([100]);
+            }
+        }
+        
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('ITパスポート学習アプリ（β版）が読み込まれました');
+        });
+    </script>
+</body>
+</html>
