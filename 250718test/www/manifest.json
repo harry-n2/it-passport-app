@@ -1,7 +1,7 @@
 {
-  "name": "ITパスポート過去問アプリ",
-  "short_name": "ITパスポート",
-  "description": "500問の充実コンテンツで合格を目指すITパスポート学習アプリ",
+  "name": "ITパスポート学習アプリ（βテスト版）",
+  "short_name": "ITパスポートβ",
+  "description": "音声・振動対応！カテゴリ別学習でITパスポート合格を目指すβテスト版アプリ",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#667eea",

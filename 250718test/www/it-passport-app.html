@@ -288,6 +288,74 @@
             color: #333;
         }
         
+        .settings-area {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .settings-area.active {
+            display: block;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
         .score-display {
             font-size: 3em;
             font-weight: bold;
@@ -336,8 +404,8 @@
 <body>
     <div class="container">
         <header class="header">
-            <h1>📱 ITパスポート学習アプリ</h1>
-            <p>効率的な学習で確実に合格を目指そう！</p>
+            <h1>📱 ITパスポート学習アプリ（β版）</h1>
+            <p>音声・振動対応の新機能をテスト中！</p>
         </header>
         
         <div class="main-content">
@@ -345,7 +413,22 @@
                 <div class="menu-grid">
                     <button class="menu-item practice" onclick="showPractice()">
                         <h3>📚 過去問練習</h3>
-                        <p>分野別・年度別で問題を解く</p>
+                        <p>全問題をランダムで解く</p>
+                    </button>
+                    
+                    <button class="menu-item" onclick="showCategoryQuestions('ストラテジ')">
+                        <h3>💼 ストラテジ系</h3>
+                        <p>経営戦略・企業法務等</p>
+                    </button>
+                    
+                    <button class="menu-item" onclick="showCategoryQuestions('マネジメント')">
+                        <h3>📋 マネジメント系</h3>
+                        <p>プロジェクト・システム管理</p>
+                    </button>
+                    
+                    <button class="menu-item" onclick="showCategoryQuestions('テクノロジ')">
+                        <h3>💻 テクノロジ系</h3>
+                        <p>IT技術・セキュリティ等</p>
                     </button>
                     
                     <button class="menu-item mock-test" onclick="showMockTest()">
@@ -361,6 +444,11 @@
                     <button class="menu-item" onclick="showDailyQuestion()">
                         <h3>🎯 今日の1問</h3>
                         <p>毎日コツコツ習慣化</p>
+                    </button>
+                    
+                    <button class="menu-item" onclick="showSettings()">
+                        <h3>⚙️ 設定</h3>
+                        <p>音声・振動・表示設定</p>
                     </button>
                 </div>
             </div>
@@ -409,6 +497,43 @@
                         <div class="stat-value" id="streak-days">0</div>
                         <div class="stat-label">連続学習日数</div>
                     </div>
+                </div>
+                <div class="buttons">
+                    <button class="btn" onclick="backToMenu()">メニューに戻る</button>
+                </div>
+            </div>
+            
+            <div id="settings-area" class="settings-area">
+                <h2>⚙️ 設定</h2>
+                <div class="setting-item">
+                    <div>
+                        <strong>正解音</strong>
+                        <p>正解時の効果音を再生</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="correct-sound-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <strong>不正解音</strong>
+                        <p>不正解時の効果音を再生</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="incorrect-sound-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <strong>振動</strong>
+                        <p>正解・不正解時の振動フィードバック</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="vibration-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
                 </div>
                 <div class="buttons">
                     <button class="btn" onclick="backToMenu()">メニューに戻る</button>
@@ -476,8 +601,99 @@
                 ],
                 correct: 1,
                 explanation: "外部キー（Foreign Key）は、ある表の列が他の表の主キーを参照することで、表と表の間の関連（リレーション）を定義するために使用されます。"
+            },
+            {
+                id: 4,
+                year: 2023,
+                category: "ストラテジ",
+                question: "SWOT分析におけるWの意味は何か。",
+                options: [
+                    "機会",
+                    "強み",
+                    "弱み",
+                    "脅威"
+                ],
+                correct: 2,
+                explanation: "SWOT分析のWはWeakness（弱み）を表します。S（Strength：強み）、O（Opportunity：機会）、T（Threat：脅威）と合わせて分析します。"
+            },
+            {
+                id: 5,
+                year: 2023,
+                category: "マネジメント",
+                question: "品質管理における「ポカヨケ」の目的は何か。",
+                options: [
+                    "品質向上",
+                    "コスト削減",
+                    "ミス防止",
+                    "効率改善"
+                ],
+                correct: 2,
+                explanation: "ポカヨケは、人間のうっかりミスを防ぐための仕組みや装置のことで、製品やサービスの品質を保つために重要な概念です。"
             }
         ];
+        
+        const categoryQuestions = {
+            "ストラテジ": [],
+            "マネジメント": [],
+            "テクノロジ": []
+        };
+        
+        // カテゴリ別に問題を分類
+        questionsDB.forEach(q => {
+            if (categoryQuestions[q.category]) {
+                categoryQuestions[q.category].push(q);
+            }
+        });
+        
+        // 音声とバイブレーション設定
+        let settings = {
+            correctSound: true,
+            incorrectSound: true,
+            vibration: true
+        };
+        
+        // 設定を読み込み
+        function loadSettings() {
+            const saved = localStorage.getItem('appSettings');
+            if (saved) {
+                settings = { ...settings, ...JSON.parse(saved) };
+            }
+            updateSettingsUI();
+        }
+        
+        // 設定を保存
+        function saveSettings() {
+            localStorage.setItem('appSettings', JSON.stringify(settings));
+        }
+        
+        // 設定UIを更新
+        function updateSettingsUI() {
+            document.getElementById('correct-sound-toggle').checked = settings.correctSound;
+            document.getElementById('incorrect-sound-toggle').checked = settings.incorrectSound;
+            document.getElementById('vibration-toggle').checked = settings.vibration;
+        }
+        
+        // 音声再生
+        function playSound(type) {
+            if (type === 'correct' && settings.correctSound) {
+                // 正解音を再生
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhCjiS2fPNdCcFm9u8');
+                audio.volume = 0.3;
+                audio.play().catch(() => {});
+            } else if (type === 'incorrect' && settings.incorrectSound) {
+                // 不正解音を再生
+                const audio = new Audio('data:audio/wav;base64,UklGRjIEAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ4EAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhCjiS2fPNdCcFm9u8');
+                audio.volume = 0.3;
+                audio.play().catch(() => {});
+            }
+        }
+        
+        // バイブレーション
+        function vibrate(pattern) {
+            if (settings.vibration && navigator.vibrate) {
+                navigator.vibrate(pattern);
+            }
+        }
 
         let currentQuestionIndex = 0;
         let selectedAnswer = -1;
@@ -510,7 +726,25 @@
             document.getElementById('main-menu').style.display = 'none';
             document.getElementById('question-area').classList.remove('active');
             document.getElementById('study-stats').classList.add('active');
+            document.getElementById('settings-area').classList.remove('active');
             updateStats();
+        }
+        
+        function showSettings() {
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('question-area').classList.remove('active');
+            document.getElementById('study-stats').classList.remove('active');
+            document.getElementById('settings-area').classList.add('active');
+        }
+        
+        function showCategoryQuestions(category) {
+            const categoryQs = categoryQuestions[category];
+            if (categoryQs && categoryQs.length > 0) {
+                questionsDB.splice(0, questionsDB.length, ...categoryQs);
+                showPractice();
+            } else {
+                alert(`${category}の問題がまだ用意されていません。`);
+            }
         }
 
         function showDailyQuestion() {
@@ -573,6 +807,13 @@
             
             if (selectedAnswer === question.correct) {
                 correctAnswers++;
+                // 正解時の効果音とバイブレーション
+                playSound('correct');
+                vibrate([100, 50, 100]);
+            } else {
+                // 不正解時の効果音とバイブレーション
+                playSound('incorrect');
+                vibrate([200]);
             }
             
             document.getElementById('explanation-text').textContent = question.explanation;
@@ -620,6 +861,7 @@
             document.getElementById('main-menu').style.display = 'block';
             document.getElementById('question-area').classList.remove('active');
             document.getElementById('study-stats').classList.remove('active');
+            document.getElementById('settings-area').classList.remove('active');
             
             if (timerInterval) {
                 clearInterval(timerInterval);
@@ -710,6 +952,25 @@
                     localStorage.setItem('streakDays', (streakDays + 1).toString());
                 }
             }
+            
+            // 設定を読み込み
+            loadSettings();
+            
+            // 設定のイベントリスナーを追加
+            document.getElementById('correct-sound-toggle').addEventListener('change', (e) => {
+                settings.correctSound = e.target.checked;
+                saveSettings();
+            });
+            
+            document.getElementById('incorrect-sound-toggle').addEventListener('change', (e) => {
+                settings.incorrectSound = e.target.checked;
+                saveSettings();
+            });
+            
+            document.getElementById('vibration-toggle').addEventListener('change', (e) => {
+                settings.vibration = e.target.checked;
+                saveSettings();
+            });
         });
     </script>
 </body>
