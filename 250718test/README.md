@@ -184,7 +184,7 @@ MIT License - 詳細は[LICENSE](LICENSE)ファイルを参照
 
 ## 📞 サポート
 
-- **Email**: support@example.com
+- **Email**: sekaikun.office@gmail.com
 - **Issues**: [GitHub Issues](https://github.com/your-username/it-passport-app/issues)
 
 ## 🏆 実績
