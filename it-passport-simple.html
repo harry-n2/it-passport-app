@@ -1228,8 +1228,9 @@
 
         async function initLiff() {
             try {
-                // LIFF IDは後で設定されます（LINE Developers Consoleで取得）
-                const liffId = '2006709113-e6RvBkMB'; // 仮のLIFF ID - 実際のものに置き換える必要があります
+                // LIFF IDは実際の値に置き換えてください
+                // エンドポイントURL: https://harry-n2.github.io/it-passport-app/it-passport-simple.html?from=line
+                const liffId = '2006709113-e6RvBkMB'; // 実際のLIFF IDに置き換える必要があります
 
                 await liff.init({ liffId: liffId });
                 console.log('LIFF initialized successfully');
