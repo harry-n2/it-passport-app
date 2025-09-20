@@ -1,0 +1,14 @@
+# This workflow is disabled to prevent GitHub Pages conflicts
+name: Deploy static content to Pages - DISABLED
+
+on:
+  workflow_dispatch:
+
+# Disable automatic GitHub Pages deployment
+jobs:
+  deploy:
+    if: false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Disabled
+        run: echo "GitHub Pages deployment disabled"
