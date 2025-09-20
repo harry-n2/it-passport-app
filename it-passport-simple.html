@@ -13,6 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ITパスポート">
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script type="module" src="src/admob-manager.js"></script>
     <script type="module" src="src/purchase-manager.js"></script>
     <script type="module" src="src/app-manager.js"></script>
@@ -1222,7 +1223,51 @@
             purchasedFeatures: JSON.parse(localStorage.getItem('purchasedFeatures') || '[]')
         };
 
+        // LIFF関連の変数
+        let liffProfile = null;
+
+        async function initLiff() {
+            try {
+                // LIFF IDは後で設定されます（LINE Developers Consoleで取得）
+                const liffId = '2006709113-e6RvBkMB'; // 仮のLIFF ID - 実際のものに置き換える必要があります
+
+                await liff.init({ liffId: liffId });
+                console.log('LIFF initialized successfully');
+
+                if (!liff.isLoggedIn()) {
+                    // LINEログインしていない場合、ログインを促す
+                    console.log('User not logged in, redirecting to login');
+                    liff.login();
+                    return;
+                }
+
+                // プロファイル情報を取得
+                liffProfile = await liff.getProfile();
+                console.log('User profile:', liffProfile);
+
+                // ユーザー名を画面に表示
+                updateUserDisplay();
+
+            } catch (error) {
+                console.error('LIFF initialization failed:', error);
+                // LIFF初期化に失敗した場合は通常のWebアプリとして動作
+            }
+        }
+
+        function updateUserDisplay() {
+            if (liffProfile) {
+                // ヘッダーにユーザー名を表示
+                const header = document.querySelector('.header h1');
+                if (header) {
+                    header.innerHTML = `ITパスポート過去問アプリ<br><small>ようこそ、${liffProfile.displayName}さん</small>`;
+                }
+            }
+        }
+
         async function initApp() {
+            // LIFF初期化
+            await initLiff();
+
             updateStreakDays();
             updateStats();
             showDailyNotification();
