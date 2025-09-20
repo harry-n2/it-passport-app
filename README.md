@@ -196,4 +196,4 @@ MIT License - 詳細は[LICENSE](LICENSE)ファイルを参照
 
 ---
 
-**🚀 今すぐ始めよう！[デモを見る](https://your-domain.com)**
+**🚀 今すぐ始めよう！[デモを見る](https://your-domain.com)**# Force rebuild 2025年 9月 20日 土曜日 18:20:35    
