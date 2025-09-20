@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>決定ルーレット</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 500px; text-align: center; }
+        h1 { color: #333; }
+        #options-input { width: calc(100% - 2rem); min-height: 100px; border: 1px solid #ddd; border-radius: 5px; padding: 1rem; margin-bottom: 1rem; }
+        #spin-btn { padding: 1rem 2rem; font-size: 1.2rem; cursor: pointer; }
+        #result { margin-top: 2rem; font-size: 2rem; font-weight: bold; color: #2d6cdf; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>決定ルーレット</h1>
+        <textarea id="options-input" placeholder="選択肢を改行で区切って入力&#10;例:&#10;ラーメン&#10;カレー&#10;寿司"></textarea>
+        <button id="spin-btn">スピン！</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const optionsInput = document.getElementById('options-input');
+        const spinBtn = document.getElementById('spin-btn');
+        const resultDiv = document.getElementById('result');
+
+        spinBtn.addEventListener('click', () => {
+            const options = optionsInput.value.split('\n').filter(opt => opt.trim() !== '');
+            if (options.length === 0) {
+                resultDiv.textContent = '選択肢を入力してください。';
+                return;
+            }
+
+            spinBtn.disabled = true;
+            resultDiv.textContent = '...';
+
+            let spinCount = 0;
+            const spinInterval = setInterval(() => {
+                spinCount++;
+                const randomIndex = Math.floor(Math.random() * options.length);
+                resultDiv.textContent = options[randomIndex];
+                if (spinCount > 20) { // Animate for a bit
+                    clearInterval(spinInterval);
+                    spinBtn.disabled = false;
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

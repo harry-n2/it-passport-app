@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>割り勘・チップ計算</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; }
+        h1 { text-align: center; color: #333; }
+        .input-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; }
+        input { width: calc(100% - 1.5rem); padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; }
+        .result { margin-top: 1.5rem; background-color: #f9f9f9; padding: 1rem; border-radius: 5px; }
+        .result p { font-size: 1.2rem; display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>割り勘・チップ計算</h1>
+        <div class="input-group">
+            <label for="bill">合計金額 (円)</label>
+            <input type="number" id="bill" value="5000">
+        </div>
+        <div class="input-group">
+            <label for="tip">チップ (%)</label>
+            <input type="number" id="tip" value="15">
+        </div>
+        <div class="input-group">
+            <label for="people">人数</label>
+            <input type="number" id="people" value="4">
+        </div>
+        <div id="result" class="result">
+            <p><span>チップ合計:</span> <span id="tip-total"></span></p>
+            <p><span>総計:</span> <span id="bill-total"></span></p>
+            <p><strong><span>一���当たり:</span> <span id="per-person"></span></strong></p>
+        </div>
+    </div>
+
+    <script>
+        const billInput = document.getElementById('bill');
+        const tipInput = document.getElementById('tip');
+        const peopleInput = document.getElementById('people');
+        const tipTotalEl = document.getElementById('tip-total');
+        const billTotalEl = document.getElementById('bill-total');
+        const perPersonEl = document.getElementById('per-person');
+
+        function calculate() {
+            const bill = parseFloat(billInput.value) || 0;
+            const tipPercent = parseFloat(tipInput.value) || 0;
+            const people = parseInt(peopleInput.value) || 1;
+
+            const tipAmount = bill * (tipPercent / 100);
+            const totalBill = bill + tipAmount;
+            const amountPerPerson = totalBill / people;
+
+            tipTotalEl.textContent = `${Math.round(tipAmount).toLocaleString()} 円`;
+            billTotalEl.textContent = `${Math.round(totalBill).toLocaleString()} 円`;
+            perPersonEl.textContent = `${Math.ceil(amountPerPerson).toLocaleString()} 円`;
+        }
+
+        [billInput, tipInput, peopleInput].forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        calculate();
+    </script>
+</body>
+</html>

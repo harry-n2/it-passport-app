@@ -10,8 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@capacitor-community/admob": "^7.0.3",
     "@capacitor/android": "^7.4.3",
     "@capacitor/cli": "^7.4.3",
-    "@capacitor/core": "^7.4.3"
+    "@capacitor/core": "^7.4.3",
+    "@revenuecat/purchases-capacitor": "^11.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
   }
 }

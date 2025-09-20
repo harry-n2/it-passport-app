@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レシピ検索</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f0f0f0; margin: 0; padding: 1rem; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 800px; margin: auto; }
+        h1 { text-align: center; color: #333; }
+        .search-bar { text-align: center; margin-bottom: 2rem; }
+        #search-input { padding: 0.75rem; width: 60%; border: 1px solid #ddd; border-radius: 5px; }
+        #search-btn { padding: 0.75rem 1.5rem; background-color: #2d6cdf; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        #results { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .recipe-card { border: 1px solid #eee; border-radius: 5px; overflow: hidden; }
+        .recipe-card img { max-width: 100%; }
+        .recipe-card h3 { padding: 0 0.5rem; }
+        .recipe-card a { text-decoration: none; color: inherit; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>レシピ検索</h1>
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="例: カレー, チキン">
+            <button id="search-btn">検索</button>
+        </div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const resultsContainer = document.getElementById('results');
+        // Using a free public API: TheMealDB
+        const API_URL = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
+
+        async function searchRecipes(query) {
+            resultsContainer.innerHTML = '<p>検索中...</p>';
+            try {
+                const response = await fetch(`${API_URL}${query}`);
+                const data = await response.json();
+                displayRecipes(data.meals);
+            } catch (error) {
+                resultsContainer.innerHTML = '<p>レシピの検索中にエラーが発生しました。</p>';
+            }
+        }
+
+        function displayRecipes(meals) {
+            resultsContainer.innerHTML = '';
+            if (!meals) {
+                resultsContainer.innerHTML = '<p>レシピが見つかりませんでした。</p>';
+                return;
+            }
+            meals.forEach(meal => {
+                const card = document.createElement('div');
+                card.className = 'recipe-card';
+                card.innerHTML = `
+                    <a href="${meal.strSource || '#'}" target="_blank">
+                        <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                        <h3>${meal.strMeal}</h3>
+                    </a>
+                `;
+                resultsContainer.appendChild(card);
+            });
+        }
+
+        searchBtn.addEventListener('click', () => {
+            const query = searchInput.value.trim();
+            if (query) searchRecipes(query);
+        });
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchBtn.click();
+        });
+        
+        searchRecipes("Arrabiata"); // Initial search
+    </script>
+</body>
+</html>

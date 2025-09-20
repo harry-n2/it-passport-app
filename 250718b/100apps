@@ -1,0 +1,19 @@
+ index.html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Harry's App Collection</title>
+</head>
+<body>
+  <h1>Welcome to Harry's App Collection</h1>
+  <ul>
+    <li><a href="calculator.html">Calculator</a></li>
+    <li><a href="bmi-calculator.html">BMI Calculator</a></li>
+    <li><a href="base64-encoder.html">Base64 Encoder</a></li>
+    <li><a href="bar-chart-generator.html">Bar Chart Generator</a></li>
+    <li><a href="age-calculator.html">Age Calculator</a></li>
+    <!-- 他のアプリも追加可能 -->
+  </ul>
+</body>
+</html>

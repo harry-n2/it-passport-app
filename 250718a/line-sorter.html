@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>行ソート</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 800px; height: 90vh; display: flex; flex-direction: column; }
+        h1 { text-align: center; color: #333; margin-top: 0; }
+        .panes { display: flex; gap: 1rem; flex-grow: 1; }
+        textarea { width: 100%; height: 100%; border: 1px solid #ddd; border-radius: 5px; padding: 1rem; }
+        .controls { margin: 1rem 0; text-align: center; }
+        button { padding: 0.5rem 1rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>行ソート</h1>
+        <div class="controls">
+            <button id="sort-asc-btn">昇順 (A-Z)</button>
+            <button id="sort-desc-btn">降順 (Z-A)</button>
+        </div>
+        <div class="panes">
+            <textarea id="input" placeholder="ここにテキストを入力..."></textarea>
+        </div>
+    </div>
+
+    <script>
+        const inputArea = document.getElementById('input');
+        document.getElementById('sort-asc-btn').addEventListener('click', () => {
+            const lines = inputArea.value.split('\n').filter(line => line.trim() !== '');
+            lines.sort();
+            inputArea.value = lines.join('\n');
+        });
+        document.getElementById('sort-desc-btn').addEventListener('click', () => {
+            const lines = inputArea.value.split('\n').filter(line => line.trim() !== '');
+            lines.sort().reverse();
+            inputArea.value = lines.join('\n');
+        });
+    </script>
+</body>
+</html>

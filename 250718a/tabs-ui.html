@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タブUI</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f0f0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 600px; }
+        .tab-buttons { display: flex; border-bottom: 2px solid #ddd; }
+        .tab-button { padding: 1rem 1.5rem; cursor: pointer; background: none; border: none; font-size: 1rem; }
+        .tab-button.active { border-bottom: 2px solid #2d6cdf; color: #2d6cdf; }
+        .tab-content { padding: 1.5rem 0; display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>タブUI</h1>
+        <div class="tab-buttons">
+            <button class="tab-button active" data-tab="tab1">タブ 1</button>
+            <button class="tab-button" data-tab="tab2">タブ 2</button>
+            <button class="tab-button" data-tab="tab3">タブ 3</button>
+        </div>
+        <div id="tab1" class="tab-content active">
+            <h2>コンテンツ 1</h2>
+            <p>これはタブ1のコンテンツです。</p>
+        </div>
+        <div id="tab2" class="tab-content">
+            <h2>コンテンツ 2</h2>
+            <p>これはタブ2のコンテンツです。</p>
+        </div>
+        <div id="tab3" class="tab-content">
+            <h2>コンテンツ 3</h2>
+            <p>これはタブ3のコンテンツです。</p>
+        </div>
+    </div>
+
+    <script>
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(button.dataset.tab).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

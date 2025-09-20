@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ファイルハッシュ計算</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 600px; text-align: center; }
+        h1 { color: #333; }
+        .upload-area { border: 2px dashed #ddd; padding: 2rem; margin-bottom: 1rem; cursor: pointer; }
+        #results { margin-top: 1rem; text-align: left; }
+        .result-item { margin-bottom: 0.5rem; }
+        .result-item span { font-weight: bold; }
+        .result-item input { width: 100%; font-family: 'Courier New', Courier, monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ファイルハッシュ計算</h1>
+        <div class="upload-area" id="upload-area">
+            <p>ここにファイルをドラッグ＆ドロップするか、クリックして選択</p>
+            <input type="file" id="file-input" hidden>
+        </div>
+        <div id="results"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const uploadArea = document.getElementById('upload-area');
+        const resultsDiv = document.getElementById('results');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+
+        function handleFile(file) {
+            if (!file) return;
+            resultsDiv.innerHTML = '<p>計算中...</p>';
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const wordArray = CryptoJS.lib.WordArray.create(e.target.result);
+                const md5 = CryptoJS.MD5(wordArray).toString();
+                const sha1 = CryptoJS.SHA1(wordArray).toString();
+                const sha256 = CryptoJS.SHA256(wordArray).toString();
+                displayResults(md5, sha1, sha256);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function displayResults(md5, sha1, sha256) {
+            resultsDiv.innerHTML = `
+                <div class="result-item"><span>MD5:</span><input value="${md5}" readonly></div>
+                <div class="result-item"><span>SHA-1:</span><input value="${sha1}" readonly></div>
+                <div class="result-item"><span>SHA-256:</span><input value="${sha256}" readonly></div>
+            `;
+        }
+    </script>
+</body>
+</html>

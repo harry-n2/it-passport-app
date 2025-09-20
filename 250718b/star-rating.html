@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星評価コンポーネント</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+        .star-rating .star { font-size: 3rem; color: #ddd; cursor: pointer; transition: color 0.2s; }
+        .star-rating .star.selected, .star-rating .star.hover { color: #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>評価してください</h1>
+        <div class="star-rating" id="star-rating">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+        </div>
+        <p id="rating-value">評価: 0</p>
+    </div>
+
+    <script>
+        const starRating = document.getElementById('star-rating');
+        const stars = starRating.querySelectorAll('.star');
+        const ratingValue = document.getElementById('rating-value');
+        let currentRating = 0;
+
+        stars.forEach(star => {
+            star.addEventListener('mouseover', () => {
+                resetStars();
+                const value = parseInt(star.dataset.value);
+                for (let i = 0; i < value; i++) {
+                    stars[i].classList.add('hover');
+                }
+            });
+
+            star.addEventListener('mouseout', resetStars);
+
+            star.addEventListener('click', () => {
+                currentRating = parseInt(star.dataset.value);
+                ratingValue.textContent = `評価: ${currentRating}`;
+                updateStars();
+            });
+        });
+
+        function resetStars() {
+            stars.forEach(s => s.classList.remove('hover'));
+        }
+
+        function updateStars() {
+            stars.forEach((star, index) => {
+                if (index < currentRating) {
+                    star.classList.add('selected');
+                } else {
+                    star.classList.remove('selected');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

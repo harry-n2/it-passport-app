@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カレンダー</title>
+    <style>
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; }
+        .calendar { width: 90%; max-width: 400px; background: white; padding: 1rem; border-radius: 10px; }
+        .header { display: flex; justify-content: space-between; align-items: center; }
+        .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
+        .days { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; gap: 5px; }
+        .days div { padding: 10px 0; }
+        .days .today { background-color: #ffc107; border-radius: 50%; }
+    </style>
+</head>
+<body>
+    <div class="calendar">
+        <div class="header">
+            <button id="prev-month">&lt;</button>
+            <h2 id="month-year"></h2>
+            <button id="next-month">&gt;</button>
+        </div>
+        <div class="weekdays"><div>日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div>土</div></div>
+        <div class="days" id="days"></div>
+    </div>
+    <script>
+        const monthYearEl = document.getElementById('month-year');
+        const daysEl = document.getElementById('days');
+        const prevBtn = document.getElementById('prev-month');
+        const nextBtn = document.getElementById('next-month');
+        let date = new Date();
+
+        function renderCalendar() {
+            date.setDate(1);
+            const firstDayIndex = date.getDay();
+            const lastDayIndex = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDay();
+            const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+            const prevLastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
+            const nextDays = 7 - lastDayIndex - 1;
+
+            monthYearEl.textContent = `${date.getFullYear()}年 ${date.getMonth() + 1}月`;
+            daysEl.innerHTML = '';
+
+            for (let x = firstDayIndex; x > 0; x--) {
+                daysEl.innerHTML += `<div class="prev-date">${prevLastDay - x + 1}</div>`;
+            }
+
+            for (let i = 1; i <= lastDay; i++) {
+                if (i === new Date().getDate() && date.getMonth() === new Date().getMonth()) {
+                    daysEl.innerHTML += `<div class="today">${i}</div>`;
+                } else {
+                    daysEl.innerHTML += `<div>${i}</div>`;
+                }
+            }
+
+            for (let j = 1; j <= nextDays; j++) {
+                daysEl.innerHTML += `<div class="next-date">${j}</div>`;
+            }
+        }
+
+        prevBtn.addEventListener('click', () => { date.setMonth(date.getMonth() - 1); renderCalendar(); });
+        nextBtn.addEventListener('click', () => { date.setMonth(date.getMonth() + 1); renderCalendar(); });
+        renderCalendar();
+    </script>
+</body>
+</html>

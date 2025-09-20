@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>度量衡変換</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 500px; }
+        h1 { text-align: center; color: #333; }
+        .group { margin-bottom: 1.5rem; }
+        label { font-weight: bold; margin-bottom: 0.5rem; display: block; }
+        .input-row { display: flex; gap: 1rem; align-items: center; }
+        input, select { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
+        .equals { font-size: 1.5rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>度量衡変換</h1>
+        <div class="group">
+            <label for="category">変換の種類:</label>
+            <select id="category"></select>
+        </div>
+        <div class="group">
+            <div class="input-row">
+                <input type="number" id="input-value" value="1">
+                <select id="from-unit"></select>
+                <span class="equals">=</span>
+                <input type="text" id="output-value" readonly style="background-color: #eee;">
+                <select id="to-unit"></select>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const categorySelect = document.getElementById('category');
+        const fromUnitSelect = document.getElementById('from-unit');
+        const toUnitSelect = document.getElementById('to-unit');
+        const inputValue = document.getElementById('input-value');
+        const outputValue = document.getElementById('output-value');
+
+        const units = {
+            length: { name: '長さ', base: 'meter', list: { meter: { name: 'メートル (m)', to_base: 1 }, kilometer: { name: 'キロメートル (km)', to_base: 1000 }, centimeter: { name: 'センチメートル (cm)', to_base: 0.01 }, millimeter: { name: 'ミリメートル (mm)', to_base: 0.001 }, mile: { name: 'マイル (mi)', to_base: 1609.34 }, yard: { name: 'ヤード (yd)', to_base: 0.9144 }, foot: { name: 'フィート (ft)', to_base: 0.3048 }, inch: { name: 'インチ (in)', to_base: 0.0254 } } },
+            mass: { name: '重さ', base: 'gram', list: { gram: { name: 'グラム (g)', to_base: 1 }, kilogram: { name: 'キログラム (kg)', to_base: 1000 }, milligram: { name: 'ミリグラム (mg)', to_base: 0.001 }, pound: { name: 'ポンド (lb)', to_base: 453.592 }, ounce: { name: 'オンス (oz)', to_base: 28.3495 } } },
+            area: { name: '面積', base: 'sqmeter', list: { sqmeter: { name: '平方メートル (m²)', to_base: 1 }, sqkilometer: { name: '平方キロメートル (km²)', to_base: 1000000 }, hectare: { name: 'ヘクタール (ha)', to_base: 10000 }, sqfoot: { name: '平���フィート (ft²)', to_base: 0.092903 }, acre: { name: 'エーカー (ac)', to_base: 4046.86 } } }
+        };
+
+        function populateCategories() {
+            for (const key in units) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = units[key].name;
+                categorySelect.appendChild(option);
+            }
+        }
+
+        function populateUnits() {
+            const category = categorySelect.value;
+            const unitList = units[category].list;
+            fromUnitSelect.innerHTML = '';
+            toUnitSelect.innerHTML = '';
+            for (const key in unitList) {
+                const fromOption = document.createElement('option');
+                fromOption.value = key;
+                fromOption.textContent = unitList[key].name;
+                fromUnitSelect.appendChild(fromOption);
+
+                const toOption = document.createElement('option');
+                toOption.value = key;
+                toOption.textContent = unitList[key].name;
+                toUnitSelect.appendChild(toOption);
+            }
+            toUnitSelect.value = Object.keys(unitList)[1] || Object.keys(unitList)[0];
+        }
+
+        function convert() {
+            const category = categorySelect.value;
+            const from = fromUnitSelect.value;
+            const to = toUnitSelect.value;
+            const input = parseFloat(inputValue.value);
+
+            if (isNaN(input)) {
+                outputValue.value = '';
+                return;
+            }
+
+            const fromUnit = units[category].list[from];
+            const toUnit = units[category].list[to];
+            
+            const baseValue = input * fromUnit.to_base;
+            const result = baseValue / toUnit.to_base;
+
+            outputValue.value = result.toFixed(5);
+        }
+
+        categorySelect.addEventListener('change', () => {
+            populateUnits();
+            convert();
+        });
+        inputValue.addEventListener('input', convert);
+        fromUnitSelect.addEventListener('change', convert);
+        toUnitSelect.addEventListener('change', convert);
+
+        populateCategories();
+        populateUnits();
+        convert();
+    </script>
+</body>
+</html>

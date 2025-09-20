@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>元素周期表</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f0f0f0; margin: 0; padding: 1rem; }
+        h1 { text-align: center; }
+        .periodic-table { display: grid; grid-template-columns: repeat(18, 1fr); gap: 4px; max-width: 1200px; margin: auto; }
+        .element { background-color: #fff; border: 1px solid #ccc; padding: 5px; text-align: center; cursor: pointer; transition: transform 0.2s; }
+        .element:hover { transform: scale(1.1); z-index: 10; }
+        .element .symbol { font-size: 1.2em; font-weight: bold; }
+        .element .number { font-size: 0.7em; }
+        .element .name { font-size: 0.6em; display: none; }
+        .element:hover .name { display: block; }
+        /* Categories */
+        .alkali-metal { background-color: #ff8a80; }
+        .alkaline-earth-metal { background-color: #ffd180; }
+        .lanthanide { background-color: #ffff8d; }
+        .actinide { background-color: #dcedc8; }
+        .transition-metal { background-color: #b3e5fc; }
+        .post-transition-metal { background-color: #c5cae9; }
+        .metalloid { background-color: #d1c4e9; }
+        .nonmetal { background-color: #a7ffeb; }
+        .halogen { background-color: #b2dfdb; }
+        .noble-gas { background-color: #e1bee7; }
+    </style>
+</head>
+<body>
+    <h1>元素周期表</h1>
+    <div class="periodic-table" id="periodic-table"></div>
+
+    <script>
+        const periodicTable = document.getElementById('periodic-table');
+        const elements = [
+            { "number": 1, "symbol": "H", "name": "水素", "category": "nonmetal", "x": 1, "y": 1 },
+            { "number": 2, "symbol": "He", "name": "ヘリウム", "category": "noble-gas", "x": 18, "y": 1 },
+            { "number": 3, "symbol": "Li", "name": "リチウム", "category": "alkali-metal", "x": 1, "y": 2 },
+            // ... (add all 118 elements)
+        ];
+        
+        // Simplified data for demonstration
+        const elementData = `1,H,水素,nonmetal,1,1;2,He,ヘリウム,noble-gas,18,1;3,Li,リチウム,alkali-metal,1,2;4,Be,ベリリウム,alkaline-earth-metal,2,2;5,B,ホウ素,metalloid,13,2;6,C,炭素,nonmetal,14,2;7,N,窒素,nonmetal,15,2;8,O,酸素,nonmetal,16,2;9,F,フッ素,halogen,17,2;10,Ne,ネオン,noble-gas,18,2;11,Na,ナトリウム,alkali-metal,1,3;12,Mg,マグネシウム,alkaline-earth-metal,2,3;13,Al,アルミニウム,post-transition-metal,13,3;14,Si,ケイ素,metalloid,14,3;15,P,リン,nonmetal,15,3;16,S,硫黄,nonmetal,16,3;17,Cl,塩素,halogen,17,3;18,Ar,アルゴン,noble-gas,18,3;19,K,カリウム,alkali-metal,1,4;20,Ca,カルシウム,alkaline-earth-metal,2,4;21,Sc,スカンジウム,transition-metal,3,4;22,Ti,チタン,transition-metal,4,4;23,V,バナジウム,transition-metal,5,4;24,Cr,クロム,transition-metal,6,4;25,Mn,マンガン,transition-metal,7,4;26,Fe,鉄,transition-metal,8,4;27,Co,コバルト,transition-metal,9,4;28,Ni,ニッケル,transition-metal,10,4;29,Cu,銅,transition-metal,11,4;30,Zn,亜鉛,transition-metal,12,4;31,Ga,ガリウム,post-transition-metal,13,4;32,Ge,ゲルマニウム,metalloid,14,4;33,As,ヒ素,metalloid,15,4;34,Se,セレン,nonmetal,16,4;35,Br,臭素,halogen,17,4;36,Kr,クリプトン,noble-gas,18,4;`;
+
+        elementData.split(';').filter(d => d).forEach(data => {
+            const [number, symbol, name, category, x, y] = data.split(',');
+            const elDiv = document.createElement('div');
+            elDiv.className = `element ${category}`;
+            elDiv.style.gridColumn = x;
+            elDiv.style.gridRow = y;
+            elDiv.innerHTML = `<div class="number">${number}</div><div class="symbol">${symbol}</div><div class="name">${name}</div>`;
+            elDiv.title = `${number}: ${name} (${symbol})`;
+            periodicTable.appendChild(elDiv);
+        });
+    </script>
+</body>
+</html>

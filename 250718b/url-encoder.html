@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL エンコーダー/デコーダー</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 95%; max-width: 800px; }
+        h1 { text-align: center; color: #333; }
+        .editor-group { display: flex; flex-direction: column; gap: 1rem; }
+        textarea { width: calc(100% - 2rem); min-height: 150px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; padding: 1rem; resize: vertical; }
+        .controls { display: flex; justify-content: center; align-items: center; gap: 1rem; margin: 1rem 0; }
+        button { padding: 0.75rem 1.5rem; background-color: #2d6cdf; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URL エンコーダー/デコーダー</h1>
+        <div class="editor-group">
+            <textarea id="decoded-input" placeholder="デコード済みURL"></textarea>
+            <div class="controls">
+                <button id="encode-btn">↓ エンコード ↓</button>
+                <button id="decode-btn">↑ デコード ↑</button>
+            </div>
+            <textarea id="encoded-input" placeholder="エンコード済みURL"></textarea>
+        </div>
+    </div>
+
+    <script>
+        const decodedInput = document.getElementById('decoded-input');
+        const encodedInput = document.getElementById('encoded-input');
+        const encodeBtn = document.getElementById('encode-btn');
+        const decodeBtn = document.getElementById('decode-btn');
+
+        encodeBtn.addEventListener('click', () => {
+            try {
+                encodedInput.value = encodeURIComponent(decodedInput.value);
+            } catch (e) {
+                encodedInput.value = 'エンコードエラー: ' + e.message;
+            }
+        });
+
+        decodeBtn.addEventListener('click', () => {
+            try {
+                decodedInput.value = decodeURIComponent(encodedInput.value);
+            } catch (e) {
+                decodedInput.value = 'デコードエラー: ' + e.message;
+            }
+        });
+    </script>
+</body>
+</html>

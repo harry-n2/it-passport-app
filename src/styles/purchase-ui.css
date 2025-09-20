@@ -1,0 +1,198 @@
+/* 購入関連のUI スタイル */
+
+/* ローディングオーバーレイ */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.loading-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007AFF;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* トースト通知 */
+.toast {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    background: #333;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 90%;
+    text-align: center;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-success {
+    background: #4CAF50;
+}
+
+.toast-error {
+    background: #f44336;
+}
+
+.toast-info {
+    background: #2196F3;
+}
+
+/* 購入ボタンのスタイル */
+.purchase-btn {
+    background: linear-gradient(45deg, #007AFF, #5AC8FA);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 122, 255, 0.3);
+}
+
+.purchase-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);
+}
+
+.purchase-btn:active {
+    transform: translateY(0);
+}
+
+.purchase-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 購入済み表示 */
+.purchased {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.purchased::before {
+    content: "✓ ";
+}
+
+/* プレミアム機能の無効化表示 */
+.premium-feature.disabled,
+.mock-test-feature.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.premium-feature.disabled::after,
+.mock-test-feature.disabled::after {
+    content: "🔒 プレミアム";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 193, 7, 0.9);
+    color: #333;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* 購入モーダルの更新 */
+.purchase-modal .purchase-option {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.purchase-modal .purchase-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.purchase-modal .purchase-option.purchased {
+    background: #f0f9ff;
+    border: 2px solid #4CAF50;
+}
+
+.purchase-modal .purchase-option.purchased::after {
+    content: "購入済み";
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: #4CAF50;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* 広告領域 */
+.ad-container {
+    margin: 20px 0;
+    text-align: center;
+    min-height: 50px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #999;
+}
+
+.ad-container.hidden {
+    display: none;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 480px) {
+    .loading-content {
+        margin: 20px;
+        padding: 20px;
+    }
+    
+    .toast {
+        margin: 0 20px;
+        max-width: calc(100% - 40px);
+    }
+    
+    .purchase-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}

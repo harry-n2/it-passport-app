@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>簡易投票アプリ</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 500px; }
+        h1 { text-align: center; color: #333; }
+        #poll-options button { display: block; width: 100%; padding: 1rem; margin-bottom: 0.5rem; font-size: 1.1rem; cursor: pointer; }
+        #results-view { display: none; }
+        .result-item { margin-bottom: 0.5rem; }
+        .result-bar { background-color: #d4edda; height: 24px; line-height: 24px; color: #155724; text-align: left; padding-left: 5px; border-radius: 3px; white-space: nowrap; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="poll-view">
+            <h1>今日のランチは？</h1>
+            <div id="poll-options">
+                <button data-option="ramen">ラーメン</button>
+                <button data-option="curry">カレー</button>
+                <button data-option="sushi">寿司</button>
+                <button data-option="other">その他</button>
+            </div>
+        </div>
+        <div id="results-view">
+            <h1>結果</h1>
+            <div id="results-container"></div>
+            <button id="reset-btn" style="margin-top: 1rem;">投票をリセット</button>
+        </div>
+    </div>
+
+    <script>
+        const pollView = document.getElementById('poll-view');
+        const resultsView = document.getElementById('results-view');
+        const pollOptions = document.getElementById('poll-options');
+        const resultsContainer = document.getElementById('results-container');
+        const resetBtn = document.getElementById('reset-btn');
+        const storageKey = 'simplePollVotes';
+
+        let votes = JSON.parse(localStorage.getItem(storageKey)) || { ramen: 0, curry: 0, sushi: 0, other: 0 };
+
+        function showResults() {
+            pollView.style.display = 'none';
+            resultsView.style.display = 'block';
+            resultsContainer.innerHTML = '';
+            const totalVotes = Object.values(votes).reduce((sum, count) => sum + count, 0);
+
+            for (const option in votes) {
+                const count = votes[option];
+                const percentage = totalVotes === 0 ? 0 : (count / totalVotes * 100).toFixed(1);
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+                resultItem.innerHTML = `
+                    <span>${option.charAt(0).toUpperCase() + option.slice(1)} (${count}票)</span>
+                    <div class="result-bar" style="width: ${percentage}%; background-color: #2d6cdf; color: white;">${percentage}%</div>
+                `;
+                resultsContainer.appendChild(resultItem);
+            }
+        }
+
+        pollOptions.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const option = e.target.dataset.option;
+                votes[option]++;
+                localStorage.setItem(storageKey, JSON.stringify(votes));
+                showResults();
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            localStorage.removeItem(storageKey);
+            votes = { ramen: 0, curry: 0, sushi: 0, other: 0 };
+            resultsView.style.display = 'none';
+            pollView.style.display = 'block';
+        });
+
+        // If already voted, show results
+        // if (localStorage.getItem(storageKey)) {
+        //     showResults();
+        // }
+    </script>
+</body>
+</html>

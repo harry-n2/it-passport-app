@@ -17,7 +17,7 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
     @Override
     public void load() {
         billingClient = BillingClient.newBuilder(getContext())
-            .enablePendingPurchases()
+            .enablePendingPurchases(PendingPurchasesParams.newBuilder().build())
             .setListener(this)
             .build();
     }
@@ -90,7 +90,7 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
             .build();
 
         billingClient.queryProductDetailsAsync(params, (billingResult, productDetailsList) -> {
-            if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK || productDetailsList.isEmpty()) {
+            if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK || productDetailsList == null || productDetailsList.size() == 0) {
                 call.reject("Product not found: " + productId);
                 return;
             }

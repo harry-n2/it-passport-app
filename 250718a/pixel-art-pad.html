@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ピクセルアートパッド</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; }
+        .container { background-color: white; padding: 1rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+        #grid-container { display: grid; border: 1px solid #ccc; margin-bottom: 1rem; }
+        .pixel { background-color: #fff; border: 1px solid #eee; }
+        .controls { display: flex; justify-content: center; gap: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ピクセルアート</h1>
+        <div id="grid-container"></div>
+        <div class="controls">
+            <input type="color" id="color-picker" value="#000000">
+            <button id="clear-btn">クリア</button>
+        </div>
+    </div>
+
+    <script>
+        const gridContainer = document.getElementById('grid-container');
+        const colorPicker = document.getElementById('color-picker');
+        const clearBtn = document.getElementById('clear-btn');
+        const gridSize = 32;
+        let isDrawing = false;
+
+        gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+        gridContainer.style.width = '512px';
+        gridContainer.style.height = '512px';
+
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const pixel = document.createElement('div');
+            pixel.className = 'pixel';
+            pixel.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                e.target.style.backgroundColor = colorPicker.value;
+            });
+            pixel.addEventListener('mouseover', (e) => {
+                if (isDrawing) {
+                    e.target.style.backgroundColor = colorPicker.value;
+                }
+            });
+            gridContainer.appendChild(pixel);
+        }
+        
+        window.addEventListener('mouseup', () => isDrawing = false);
+
+        clearBtn.addEventListener('click', () => {
+            gridContainer.querySelectorAll('.pixel').forEach(p => p.style.backgroundColor = '#fff');
+        });
+    </script>
+</body>
+</html>

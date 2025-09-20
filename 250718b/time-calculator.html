@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>時間計算電卓</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; }
+        h1 { text-align: center; color: #333; }
+        .time-input { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem; }
+        .time-input input { width: 60px; text-align: center; padding: 0.5rem; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
+        .operators { text-align: center; margin-bottom: 1rem; }
+        .operators button { font-size: 1.5rem; width: 50px; height: 50px; margin: 0 0.5rem; border-radius: 50%; border: none; background-color: #e0e0e0; cursor: pointer; }
+        .result { text-align: center; font-size: 1.5rem; font-weight: bold; margin-top: 1.5rem; padding: 1rem; background-color: #f9f9f9; border-radius: 5px; }
+        .actions { display: flex; justify-content: space-between; margin-top: 1rem; }
+        .actions button { width: 48%; padding: 0.75rem; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; }
+        #calc-btn { background-color: #2d6cdf; color: white; }
+        #clear-btn { background-color: #aaa; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>時間計算電卓</h1>
+        <div class="time-input">
+            <input type="number" id="h1" min="0" placeholder="時"> 時
+            <input type="number" id="m1" min="0" max="59" placeholder="分"> 分
+            <input type="number" id="s1" min="0" max="59" placeholder="秒"> 秒
+        </div>
+        <div class="operators">
+            <button data-op="+">+</button>
+            <button data-op="-">-</button>
+        </div>
+        <div class="time-input">
+            <input type="number" id="h2" min="0" placeholder="時"> 時
+            <input type="number" id="m2" min="0" max="59" placeholder="分"> 分
+            <input type="number" id="s2" min="0" max="59" placeholder="秒"> 秒
+        </div>
+        <div class="actions">
+            <button id="calc-btn">=</button>
+            <button id="clear-btn">C</button>
+        </div>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        let currentOperator = '+';
+        const resultDiv = document.getElementById('result');
+
+        document.querySelectorAll('.operators button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentOperator = btn.dataset.op;
+                document.querySelector('.operators .active')?.classList.remove('active');
+                btn.classList.add('active');
+            });
+        });
+        
+        document.getElementById('calc-btn').addEventListener('click', () => {
+            const h1 = parseInt(document.getElementById('h1').value) || 0;
+            const m1 = parseInt(document.getElementById('m1').value) || 0;
+            const s1 = parseInt(document.getElementById('s1').value) || 0;
+            const h2 = parseInt(document.getElementById('h2').value) || 0;
+            const m2 = parseInt(document.getElementById('m2').value) || 0;
+            const s2 = parseInt(document.getElementById('s2').value) || 0;
+
+            const totalSeconds1 = h1 * 3600 + m1 * 60 + s1;
+            const totalSeconds2 = h2 * 3600 + m2 * 60 + s2;
+
+            let resultSeconds;
+            if (currentOperator === '+') {
+                resultSeconds = totalSeconds1 + totalSeconds2;
+            } else {
+                resultSeconds = totalSeconds1 - totalSeconds2;
+            }
+            
+            const sign = resultSeconds < 0 ? '-' : '';
+            resultSeconds = Math.abs(resultSeconds);
+
+            const rh = Math.floor(resultSeconds / 3600);
+            const rm = Math.floor((resultSeconds % 3600) / 60);
+            const rs = resultSeconds % 60;
+
+            resultDiv.textContent = `${sign}${rh} 時 ${rm} 分 ${rs} 秒`;
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            document.querySelectorAll('input').forEach(input => input.value = '');
+            resultDiv.textContent = '';
+        });
+        
+        document.querySelector('.operators button[data-op="+"]').classList.add('active');
+    </script>
+</body>
+</html>

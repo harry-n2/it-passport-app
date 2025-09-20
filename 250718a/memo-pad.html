@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>簡易メモ帳</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 1rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 95%; max-width: 600px; height: 90vh; display: flex; flex-direction: column; }
+        h1 { text-align: center; color: #333; margin-top: 0; }
+        textarea { flex-grow: 1; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; padding: 1rem; resize: none; }
+        .status { text-align: right; font-size: 0.9rem; color: #666; margin-top: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>簡易メモ帳 (自動保存)</h1>
+        <textarea id="memo-pad" placeholder="ここにメモを入力..."></textarea>
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        const memoPad = document.getElementById('memo-pad');
+        const statusDiv = document.getElementById('status');
+        const storageKey = 'simpleMemoPadContent';
+
+        // 起動時にlocalStorageから読み込む
+        memoPad.value = localStorage.getItem(storageKey) || '';
+
+        let saveTimeout;
+        memoPad.addEventListener('input', () => {
+            statusDiv.textContent = '編集中...';
+            // 既存のタイマーをクリア
+            clearTimeout(saveTimeout);
+            // 1秒後に入力を保存
+            saveTimeout = setTimeout(() => {
+                localStorage.setItem(storageKey, memoPad.value);
+                statusDiv.textContent = `保存済み: ${new Date().toLocaleTimeString()}`;
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

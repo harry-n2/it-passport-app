@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アコーディオンUI</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f0f0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 600px; }
+        .accordion-item { border-bottom: 1px solid #ddd; }
+        .accordion-header { padding: 1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .accordion-header::after { content: '+'; font-size: 1.5rem; }
+        .accordion-item.active .accordion-header::after { content: '-'; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .accordion-content p { padding: 0 1rem 1rem; margin: 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FAQ (アコーディオン)</h1>
+        <div class="accordion">
+            <div class="accordion-item">
+                <div class="accordion-header">質問1: これはなんですか？</div>
+                <div class="accordion-content"><p>これはアコーディオンUIのサンプルです。</p></div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header">質問2: どうやって使いますか？</div>
+                <div class="accordion-content"><p>ヘッダーをクリックするとコンテンツが開閉します。</p></div>
+            </div>
+            <div class="accordion-item">
+                <div class="accordion-header">質問3: 複数開けますか？</div>
+                <div class="accordion-content"><p>このサンプルでは複数開くことができます。</p></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        accordionItems.forEach(item => {
+            const header = item.querySelector('.accordion-header');
+            header.addEventListener('click', () => {
+                item.classList.toggle('active');
+                const content = item.querySelector('.accordion-content');
+                if (item.classList.contains('active')) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                } else {
+                    content.style.maxHeight = 0;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

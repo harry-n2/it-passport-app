@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音声認識メモ</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 600px; }
+        h1 { text-align: center; color: #333; }
+        #note { width: calc(100% - 2rem); min-height: 200px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; padding: 1rem; margin-bottom: 1rem; }
+        .controls { text-align: center; }
+        #record-btn { padding: 1rem 2rem; background-color: #dc3545; color: white; border: none; border-radius: 50px; font-size: 1.2rem; cursor: pointer; }
+        #record-btn.recording { background-color: #28a745; }
+        #status { margin-top: 1rem; text-align: center; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>音声認識メモ</h1>
+        <textarea id="note" placeholder="録音ボタンを押して話してください..."></textarea>
+        <div class="controls">
+            <button id="record-btn">録音開始</button>
+        </div>
+        <p id="status">マイクの使用許可が必要です。</p>
+    </div>
+
+    <script>
+        const noteArea = document.getElementById('note');
+        const recordBtn = document.getElementById('record-btn');
+        const status = document.getElementById('status');
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            status.textContent = 'お使いのブラウザは音声認識に対応していません。';
+            recordBtn.disabled = true;
+        } else {
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'ja-JP';
+            recognition.interimResults = true;
+            let isRecording = false;
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                noteArea.value = noteArea.value.split('...')[0] + finalTranscript + '...' + interimTranscript;
+            };
+
+            recognition.onend = () => {
+                if (isRecording) {
+                    recognition.start();
+                }
+            };
+
+            recordBtn.addEventListener('click', () => {
+                isRecording = !isRecording;
+                if (isRecording) {
+                    noteArea.value = '';
+                    recognition.start();
+                    recordBtn.textContent = '録音停止';
+                    recordBtn.classList.add('recording');
+                    status.textContent = '録音中...';
+                } else {
+                    recognition.stop();
+                    recordBtn.textContent = '録音開始';
+                    recordBtn.classList.remove('recording');
+                    status.textContent = '録音停止しました。';
+                    noteArea.value = noteArea.value.split('...')[0];
+                }
+            });
+        }
+    </script>
+</body>
+</html>

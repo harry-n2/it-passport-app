@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カラーピッカー</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
+        h1 { color: #333; }
+        .color-preview { width: 100%; height: 150px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 1.5rem; background-color: #000000; }
+        .color-picker-input { width: 80%; height: 50px; padding: 0; border: none; background: none; cursor: pointer; }
+        .color-values { margin-top: 1.5rem; }
+        .color-value { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; padding: 0.5rem; background-color: #f9f9f9; border-radius: 5px; }
+        .color-value span { font-weight: bold; }
+        .color-value input { flex-grow: 1; margin-left: 1rem; border: 1px solid #eee; padding: 0.25rem; border-radius: 3px; text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>カラーピッカー</h1>
+        <div id="color-preview" class="color-preview"></div>
+        <input type="color" id="color-picker" class="color-picker-input" value="#563d7c">
+        <div class="color-values">
+            <div class="color-value"><span>HEX</span><input type="text" id="hex-value" readonly></div>
+            <div class="color-value"><span>RGB</span><input type="text" id="rgb-value" readonly></div>
+            <div class="color-value"><span>HSL</span><input type="text" id="hsl-value" readonly></div>
+        </div>
+    </div>
+
+    <script>
+        const colorPicker = document.getElementById('color-picker');
+        const colorPreview = document.getElementById('color-preview');
+        const hexValue = document.getElementById('hex-value');
+        const rgbValue = document.getElementById('rgb-value');
+        const hslValue = document.getElementById('hsl-value');
+
+        function updateColor(hex) {
+            colorPreview.style.backgroundColor = hex;
+            hexValue.value = hex.toUpperCase();
+            
+            const rgb = hexToRgb(hex);
+            rgbValue.value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+
+            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+            hslValue.value = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+        }
+
+        function hexToRgb(hex) {
+            let r = 0, g = 0, b = 0;
+            if (hex.length == 4) {
+                r = "0x" + hex[1] + hex[1];
+                g = "0x" + hex[2] + hex[2];
+                b = "0x" + hex[3] + hex[3];
+            } else if (hex.length == 7) {
+                r = "0x" + hex[1] + hex[2];
+                g = "0x" + hex[3] + hex[4];
+                b = "0x" + hex[5] + hex[6];
+            }
+            return { r: +r, g: +g, b: +b };
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            let max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max == min) {
+                h = s = 0; // achromatic
+            } else {
+                let d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+        }
+
+        colorPicker.addEventListener('input', (e) => {
+            updateColor(e.target.value);
+        });
+
+        // Initial call
+        updateColor(colorPicker.value);
+    </script>
+</body>
+</html>

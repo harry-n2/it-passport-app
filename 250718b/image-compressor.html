@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像圧縮</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 600px; text-align: center; }
+        h1 { color: #333; }
+        .upload-area { border: 2px dashed #ddd; padding: 2rem; margin-bottom: 1rem; cursor: pointer; }
+        .preview { max-width: 100%; max-height: 200px; margin-top: 1rem; }
+        .options { margin: 1rem 0; }
+        #download-btn { display: none; padding: 0.75rem 1.5rem; background-color: #28a745; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>画像圧縮</h1>
+        <div class="upload-area" id="upload-area">
+            <p>ここに画像をドラッグ＆ドロップするか、クリックして選択</p>
+            <input type="file" id="file-input" accept="image/*" hidden>
+        </div>
+        <div class="options">
+            <label for="quality">画質 (0-1): </label>
+            <input type="range" id="quality" min="0" max="1" step="0.1" value="0.8">
+            <span id="quality-val">0.8</span>
+        </div>
+        <img id="preview" class="preview" src="" alt="画像プレビュー">
+        <p id="info"></p>
+        <a id="download-btn" href="#" download="compressed-image.jpg">ダウンロード</a>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const qualitySlider = document.getElementById('quality');
+        const qualityVal = document.getElementById('quality-val');
+        const preview = document.getElementById('preview');
+        const info = document.getElementById('info');
+        const downloadBtn = document.getElementById('download-btn');
+        let originalFile;
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = '#2d6cdf'; });
+        uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = '#ddd'; });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#ddd';
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFile(files[0]);
+            }
+        });
+        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+        qualitySlider.addEventListener('input', () => {
+            qualityVal.textContent = qualitySlider.value;
+            if (originalFile) handleFile(originalFile);
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) return;
+            originalFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    const quality = parseFloat(qualitySlider.value);
+                    const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                    
+                    preview.src = dataUrl;
+                    downloadBtn.href = dataUrl;
+                    downloadBtn.style.display = 'inline-block';
+
+                    const originalSize = (file.size / 1024).toFixed(2);
+                    const compressedSize = (dataUrl.length * 0.75 / 1024).toFixed(2); // Base64 approx.
+                    info.textContent = `元のサイズ: ${originalSize} KB -> 圧縮後のサイズ: ${compressedSize} KB`;
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>

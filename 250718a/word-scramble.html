@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>単語並べ替えゲーム</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+        #scrambled-word { font-size: 3rem; letter-spacing: 0.5em; margin-bottom: 1rem; }
+        #guess-input { padding: 0.5rem; font-size: 1.5rem; text-align: center; }
+        #result { margin-top: 1rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>単語を並べ替えろ！</h1>
+        <div id="scrambled-word"></div>
+        <input type="text" id="guess-input">
+        <p id="result"></p>
+        <button id="next-btn">次の単語</button>
+    </div>
+
+    <script>
+        const scrambledWordEl = document.getElementById('scrambled-word');
+        const guessInput = document.getElementById('guess-input');
+        const resultEl = document.getElementById('result');
+        const nextBtn = document.getElementById('next-btn');
+
+        const words = ["javascript", "html", "css", "developer", "coding"];
+        let currentWord = '';
+
+        function scrambleWord(word) {
+            return word.split('').sort(() => Math.random() - 0.5).join('');
+        }
+
+        function newWord() {
+            currentWord = words[Math.floor(Math.random() * words.length)];
+            scrambledWordEl.textContent = scrambleWord(currentWord);
+            resultEl.textContent = '';
+            guessInput.value = '';
+        }
+
+        guessInput.addEventListener('input', () => {
+            if (guessInput.value.toLowerCase() === currentWord) {
+                resultEl.textContent = '正解！';
+                resultEl.style.color = 'green';
+            } else {
+                resultEl.textContent = '';
+            }
+        });
+
+        nextBtn.addEventListener('click', newWord);
+        newWord();
+    </script>
+</body>
+</html>

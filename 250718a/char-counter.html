@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字数・単語数カウンター</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0; margin: 0; }
+        .container { background-color: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 90%; max-width: 600px; }
+        h1 { text-align: center; color: #333; }
+        textarea { width: calc(100% - 2rem); min-height: 200px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; padding: 1rem; margin-bottom: 1rem; }
+        .results { display: flex; justify-content: space-around; text-align: center; }
+        .result-item { padding: 1rem; background-color: #f9f9f9; border-radius: 5px; width: 45%; }
+        .result-item h2 { margin: 0 0 0.5rem 0; font-size: 1.2rem; color: #555; }
+        .result-item p { margin: 0; font-size: 1.8rem; font-weight: bold; color: #2d6cdf; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>文字数・単語数カウンター</h1>
+        <textarea id="text-input" placeholder="ここにテキストを入力..."></textarea>
+        <div class="results">
+            <div class="result-item">
+                <h2>文字数</h2>
+                <p id="char-count">0</p>
+            </div>
+            <div class="result-item">
+                <h2>単語数</h2>
+                <p id="word-count">0</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const textInput = document.getElementById('text-input');
+        const charCount = document.getElementById('char-count');
+        const wordCount = document.getElementById('word-count');
+
+        textInput.addEventListener('input', () => {
+            const text = textInput.value;
+            
+            // 文字数をカウント
+            charCount.textContent = text.length;
+            
+            // 単語数をカウント (スペースや改行で区切られたものを単語とする)
+            const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+            wordCount.textContent = words.length;
+            if (text.trim() === '') {
+                wordCount.textContent = 0;
+            }
+        });
+    </script>
+</body>
+</html>
