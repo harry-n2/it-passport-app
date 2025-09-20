@@ -1198,7 +1198,10 @@
             updateStats();
             showDailyNotification();
             hideAdsIfPurchased();
-            
+
+            // 初期画面をメニューに設定
+            showScreen('menu');
+
             // AppManagerを初期化
             try {
                 const { default: AppManager } = await import('./src/app-manager.js');
