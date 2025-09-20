@@ -164,7 +164,7 @@
         .question-area {
             display: none;
             padding: 12px;
-            height: calc(100vh - 200px);
+            min-height: calc(100vh - 120px);
             overflow-y: auto;
         }
         
@@ -267,7 +267,11 @@
         
         .buttons {
             margin-top: 12px;
-            padding-bottom: 12px;
+            padding-bottom: 20px;
+            position: sticky;
+            bottom: 0;
+            background: white;
+            z-index: 10;
         }
         
         .btn {
@@ -1494,12 +1498,16 @@
 
             const adBanner = document.getElementById('ad-banner');
             const notificationBanner = document.getElementById('daily-notification');
+            const navigation = document.getElementById('main-navigation');
 
             if (screen === 'menu') {
                 document.getElementById('main-menu').style.display = 'block';
                 document.getElementById('header-title').textContent = 'ITパスポート過去問';
                 document.getElementById('back-btn').style.display = 'none';
 
+                if (navigation) {
+                    navigation.style.display = 'block';
+                }
                 if (adBanner && !userStats.purchasedFeatures.includes('ad-free')) {
                     adBanner.style.display = 'flex';
                 }
@@ -1511,6 +1519,9 @@
                 document.getElementById('header-title').textContent = '過去問練習';
                 document.getElementById('back-btn').style.display = 'block';
 
+                if (navigation) {
+                    navigation.style.display = 'none';
+                }
                 if (adBanner) {
                     adBanner.style.display = 'none';
                 }
@@ -1522,6 +1533,9 @@
                 document.getElementById('header-title').textContent = '学習進捗';
                 document.getElementById('back-btn').style.display = 'block';
 
+                if (navigation) {
+                    navigation.style.display = 'none';
+                }
                 if (adBanner) {
                     adBanner.style.display = 'none';
                 }
